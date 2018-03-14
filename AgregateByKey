@@ -33,3 +33,67 @@ scala> rdd2.take(10).foreach(println)
 (58592,(699.8500213623047,4))
 (29856,(1029.9200286865234,4))
 (32676,(719.9100151062012,4))
+
+#CALCULO DE MAX CON AGREGAGEBYKEY
+scala> val ordItAgreg2 = sc.textFile("/user/cloudera/problema1").map(orderItem => (orderItem.split(",")(1).toInt, orderItem.split(",")(4).toFloat))
+ordItAgreg2: org.apache.spark.rdd.RDD[(Int, Float)] = MapPartitionsRDD[64] at map at <console>:27
+
+scala> val rdd3 = ordItAgreg2.aggregateByKey(0.0)(math.max(_,_), math.max(_,_))
+rdd3: org.apache.spark.rdd.RDD[(Int, Double)] = ShuffledRDD[65] at aggregateByKey at <console>:29
+
+scala> ordItAgreg2.take(10).foreach(println)
+(1,299.98)
+(2,199.99)
+(2,250.0)
+(2,129.99)
+(4,49.98)
+(4,299.95)
+(4,150.0)
+(4,199.92)
+(5,299.98)
+(5,299.95)
+
+scala> rdd3.take(10).foreach(println)
+(18624,199.99000549316406)                                                      
+(57436,399.9800109863281)
+(54040,499.95001220703125)
+(7608,39.9900016784668)
+(18500,399.9800109863281)
+(23556,299.95001220703125)
+(23776,199.99000549316406)
+(58592,299.95001220703125)
+(29856,399.9800109863281)
+(32676,299.9700012207031)
+
+#CALCULO DEL MIN CON AGGREGATEBYKEY
+
+scala> val ordItAgreg2 = sc.textFile("/user/cloudera/problema1").map(orderItem => (orderItem.split(",")(1).toInt, orderItem.split(",")(4).toFloat))
+ordItAgreg2: org.apache.spark.rdd.RDD[(Int, Float)] = MapPartitionsRDD[68] at map at <console>:27
+
+scala> ordItAgreg2.take(10).foreach(println)
+(1,299.98)
+(2,199.99)
+(2,250.0)
+(2,129.99)
+(4,49.98)
+(4,299.95)
+(4,150.0)
+(4,199.92)
+(5,299.98)
+(5,299.95)
+
+scala> val rdd3 = ordItAgreg2.aggregateByKey(100000000.9)(math.min(_,_), math.min(_,_))
+rdd3: org.apache.spark.rdd.RDD[(Int, Double)] = ShuffledRDD[69] at aggregateByKey at <console>:29
+
+scala> rdd3.take(10).foreach(println)
+(18624,199.99000549316406)                                                      
+(57436,109.94999694824219)
+(54040,249.89999389648438)
+(7608,39.9900016784668)
+(18500,50.0)
+(23556,299.95001220703125)
+(23776,129.99000549316406)
+(58592,119.97000122070312)
+(29856,50.0)
+(32676,59.9900016784668)
+
