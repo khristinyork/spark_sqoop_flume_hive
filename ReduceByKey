@@ -1,0 +1,49 @@
+
+#En el docker de cloudera de la base de datos de mysql cargamos los datos de la tabla order_items a el direectorio de hdfs /user/cloudera/problema1
+sqoop-import   --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera  --table order_items   --as-textfile  --target-dir /user/cloudera/problema1 --fields-terminated-by ',' ; 
+#Query que lanzamos en mysql
+#Para conectarnos:
+mysql -uroot -pclodera
+show databases;
+use retail_db;
+show tables;
+select order_item_order_id,min(order_item_subtotal),max(order_item_subtotal),count(order_item_id) from order_items where order_item_order_id=32676 grou
+#creamos un rdd con el campo order_item_order_id
+
+#en el spark shell
+#val rdd1=sc.textFile("/user/cloudera/problema1").map(reg => (reg.split(",")(1).toInt,reg.split(",")(4).toFloat)).take(10).foreach(println)
+#creamos un rdd (order_item_order_id,order_item_subtotal)
+val orderItems = sc.textFile("/user/cloudera/problema1").map(orderItem => (orderItem.split(",")(1).toInt, orderItem.split(",")(4).toFloat))
+val rdd1 = orderItems.take(10).foreach(println)
+#para orderId suma de subtotal.
+val rdd2 = orderItems.reduceByKey((total, orderItemSubtotal) => total + orderItemSubtotal)
+scala> rdd2.take(10).foreach(println)
+ORDERID,SUM(SUBTOTAL)
+(18624,199.99)                                                                  
+(57436,1309.8501)
+(54040,1049.8301)
+(7608,39.99)
+(18500,449.98)
+(23556,299.95)
+(23776,329.98)
+(58592,699.85)
+(29856,1029.92)
+(32676,719.91003)
+#el valor minimo de subtotal.
+val rdd3 = orderItems.reduceByKey((total, orderItemSubtotal) => if(total< orderItemSubtotal)total else orderItemSubtotal);
+#el maximo y el minimo del subtotal
+#creamos un rdd con este aspecto ((order_item_order_id,(order_item_subtotal,order_item_subtotal)))
+val orderItems4 = sc.textFile("/user/cloudera/problema1").map(orderItem => (orderItem.split(",")(1).toInt, (orderItem.split(",")(4).toFloat, orderItem.split(",")(4).toFloat)));
+orderItems3: org.apache.spark.rdd.RDD[(Int, Float, Float)] = MapPartitionsRDD[2] at map at <console>:27
+val rdd4 = orderItems4.reduceByKey((total, orderItemSubtotal) => (if(total._1< orderItemSubtotal._1)total._1 else orderItemSubtotal._1,if(total._2> orderItemSubtotal._2)total._2 else orderItemSubtotal._2));
+rdd4.take(10).foreach(println);
+(18624,(199.99,199.99))
+(57436,(109.95,399.98))
+(54040,(249.9,499.95))
+(7608,(39.99,39.99))
+(18500,(50.0,399.98))
+(23556,(299.95,299.95))
+(23776,(129.99,199.99))
+(58592,(119.97,299.95))
+(29856,(50.0,399.98))
+(32676,(59.99,299.97))
