@@ -1,0 +1,35 @@
+#lo primero es la inicializacion de los campos a calcular sumatorio de campo float orderItemSubtotal  0.0 y count 0 de los items que es un entero
+#Calcule los ingresos y la cantidad de elementos para cada pedido usando aggregateByKey
+#(iTotal, oisubtotal) => (iTotal._1 + oisubtotal._1, iTotal._2 + oisubtotal._2) se ejecuta en cada particion agregaciones parciales por key en la particion
+#(fTotal, iTotal) => (fTotal._1 + iTotal._1, fTotal._2 + iTotal._2) se ejecuta en el driver mergeando los valores parciales
+
+
+scala> val ordItAgreg = sc.textFile("/user/cloudera/problema1").map(orderItem => (orderItem.split(",")(1).toInt,( orderItem.split(",")(4).toFloat,1)));
+ordItAgreg: org.apache.spark.rdd.RDD[(Int, (Float, Int))] = MapPartitionsRDD[27] at map at <console>:27
+
+scala> ordItAgreg.take(10).foreach(println);
+(1,(299.98,1))
+(2,(199.99,1))
+(2,(250.0,1))
+(2,(129.99,1))
+(4,(49.98,1))
+(4,(299.95,1))
+(4,(150.0,1))
+(4,(199.92,1))
+(5,(299.98,1))
+(5,(299.95,1))
+#primero realizamos un sum de order_item_subtotal y un count de order_item_subtotal por eso ponermos un 1 para sumar 1's = count
+val rdd2 = ordItAgreg.aggregateByKey((0.0, 0))((iTotal, oisubtotal) => (iTotal._1 + oisubtotal._1, iTotal._2 + oisubtotal._2),(fTotal, iTotal) => (fTotal._1 + iTotal._1, fTotal._2 + iTotal._2));
+rdd2: org.apache.spark.rdd.RDD[(Int, (Double, Int))] = ShuffledRDD[28] at aggregateByKey at <console>:29
+
+scala> rdd2.take(10).foreach(println)
+(18624,(199.99000549316406,1))                                                  
+(57436,(1309.8500213623047,5))
+(54040,(1049.8300170898438,3))
+(7608,(39.9900016784668,1))
+(18500,(449.9800109863281,2))
+(23556,(299.95001220703125,1))
+(23776,(329.9800109863281,2))
+(58592,(699.8500213623047,4))
+(29856,(1029.9200286865234,4))
+(32676,(719.9100151062012,4))
