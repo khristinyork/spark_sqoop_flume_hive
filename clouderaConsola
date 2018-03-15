@@ -243,6 +243,27 @@ sqoop-import   --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --usern
 	-rw-r--r--   1 root supergroup          0 2018-03-15 10:31 /user/hive/warehouse/retail_stage.db/products/_SUCCESS
 	-rw-r--r--   1 root supergroup      53592 2018-03-15 10:31 /user/hive/warehouse/retail_stage.db/products/part-m-00000.avro
 
+#TRAEMOS LOS FICHEROS DE HDFS A LOCAL
+#CUANDO SE QUIERE CARGA DE MYSQL A UNA TABLA DE HIVE SE DEBE
+1.- CARGAR CON SQOOP DESDE MYSQL Y SE PUEDE GUARDAR COMO HDFS
+2.- QUITAR EL FORMATO AVRO Y COPIARLO DE HDFS A LOCAL MOVER DE LOCAL(SIN FORMATO AVRO) A HFDS DE NUEVO
+3.- DESDE HIVE CARGAMOS EL FICHERO ALMACENADO EN HDFS Y LO GUARDAMOS EN UNA TABLA EXTERNA CON FORMATO AVRO
+[root@quickstart /]# hadoop fs -get /user/hive/warehouse/retail_stage.db/order_items/part-m-00000.avro
+#CON LA HERRAMIENTA AVRO_TOOL DE CLOUDERA PASAMOS DE AVRO A OTRO FORMATO
+avro-tools getschema part-m-00000.avro > orders.avsc
+[root@quickstart /]# ls -l |grep avsc
+-rw-r--r--   1 root root     594 Mar 15 10:27 categories.avsc
+-rw-r--r--   1 root root    1509 Mar 15 10:28 customers.avsc
+-rw-r--r--   1 root root     440 Mar 15 10:29 departments.avsc
+-rw-r--r--   1 root root    1099 Mar 15 10:29 order_items.avsc
+-rw-r--r--   1 root root    1100 Mar 15 11:52 orders.avsc
+-rw-r--r--   1 root root    1041 Mar 15 10:30 products.avsc
+
+hadoop fs -mkdir /user/hive/schemas
+hadoop fs -put orders.avsc /user/hive/schemas/order =>ES IGUAL hadoop fs -copyFromLocal orders.avsc /user/hive/schemas/order
+
+create external table orders_sqoop STORED AS AVRO LOCATION '/user/hive/warehouse/retail_stage.db/orders' TBLPROPERTIES ('avro.schema.url'='/user/hive/schemas/order/orders.avsc')
+
 
 
 
