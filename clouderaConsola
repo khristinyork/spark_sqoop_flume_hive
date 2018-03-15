@@ -1,0 +1,251 @@
+#CLOUDERA EJERCICIOS.
+
+#ARRANCAR DOCKER DE CLOUDERA
+docker run --hostname=quickstart.cloudera --privileged=true -t -i -v /home/docker-clodera:/src --publish-all=true -p 8088:8088  -p 8888:8888 -p 50090:50090 -p 50070:50070 -p 50075:50075 -p 8042:8042 -p 60030:60030 -p 25000:25000 -p 25010:25010 -p 18088:18088 -p 8983:8983 -p 11000:11000 cloudera/quickstart /usr/bin/docker-quickstart
+
+
+
+PARA SABER EL TAMAÑO DE UN RDD EN MEMORIA
+import org.apache.spark.util.SizeEstimator
+println(SizeEstimator.estimate(rdd1));
+
+
+1.-Planteamiento del problema:Usando sqoop, importe la tabla de órdenes en hdfs a folders 
+ / user / cloudera / problem1 / orders . 
+ El archivo debe cargarse como archivo Avro y usar compresión rápida.
+ 
+sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera --table orders --compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec --target-dir /user/cloudera/problema1/orders --as-avrodatafile;
+sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera --table orders  --target-dir /user/cloudera/problema1/orders_nocopression_snnapy --as-avrodatafile;
+sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera --table orders --compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec --target-dir /user/cloudera/problema1/ordersTextFile --as-textfile;
+sqoop-import  --connect jdbc:mysql://quickstart.cloudera:3306/retail_db  --username root --password cloudera --table order_items --compress  --compression-codec org.apache.hadoop.io.compress.SnappyCodec  --target-dir /user/cloudera/problema1/order-items --as-avrodatafile;
+hadoop fs -ls -R /user/cloudera/problema1drwxr-xr-x   - root cloudera          0 2018-03-12 07:40 /user/cloudera/problema1/orders
+-rw-r--r--   1 root cloudera          0 2018-03-12 07:40 /user/cloudera/problema1/orders/_SUCCESS
+-rw-r--r--   1 root cloudera     164082 2018-03-12 07:40 /user/cloudera/problema1/orders/part-m-00000.avro
+-rw-r--r--   1 root cloudera     164153 2018-03-12 07:40 /user/cloudera/problema1/orders/part-m-00001.avro
+-rw-r--r--   1 root cloudera     164269 2018-03-12 07:40 /user/cloudera/problema1/orders/part-m-00002.avro
+-rw-r--r--   1 root cloudera     169328 2018-03-12 07:40 /user/cloudera/problema1/orders/part-m-00003.avro
+drwxr-xr-x   - root cloudera          0 2018-03-12 07:59 /user/cloudera/problema1/ordersTextFile
+-rw-r--r--   1 root cloudera          0 2018-03-12 07:59 /user/cloudera/problema1/ordersTextFile/_SUCCESS
+-rw-r--r--   1 root cloudera     218873 2018-03-12 07:59 /user/cloudera/problema1/ordersTextFile/part-m-00000.snappy
+-rw-r--r--   1 root cloudera     218610 2018-03-12 07:59 /user/cloudera/problema1/ordersTextFile/part-m-00001.snappy
+-rw-r--r--   1 root cloudera     220683 2018-03-12 07:59 /user/cloudera/problema1/ordersTextFile/part-m-00002.snappy
+-rw-r--r--   1 root cloudera     233412 2018-03-12 07:59 /user/cloudera/problema1/ordersTextFile/part-m-00003.snappy
+drwxr-xr-x   - root cloudera          0 2018-03-12 07:50 /user/cloudera/problema1/orders_nocopression_snnapy
+-rw-r--r--   1 root cloudera          0 2018-03-12 07:50 /user/cloudera/problema1/orders_nocopression_snnapy/_SUCCESS
+-rw-r--r--   1 root cloudera     439146 2018-03-12 07:50 /user/cloudera/problema1/orders_nocopression_snnapy/part-m-00000.avro
+-rw-r--r--   1 root cloudera     447726 2018-03-12 07:50 /user/cloudera/problema1/orders_nocopression_snnapy/part-m-00001.avro
+-rw-r--r--   1 root cloudera     446959 2018-03-12 07:50 /user/cloudera/problema1/orders_nocopression_snnapy/part-m-00002.avro
+-rw-r--r--   1 root cloudera     447606 2018-03-12 07:50 /user/cloudera/problema1/orders_nocopression_snnapy/part-m-00003.avro
+
+
+
+select table_schema "DATABASE",TABLE_NAME "tableName",convert(sum(data_length+index_length)/1048576,decimal(6,2)) "SIZE (MB)" from  information_schema.tables where   table_schema="retail_db" group by  table_schema,TABLE_NAME;
+
+2. Problema 2  Utilizando Sqoop, importar la tabla “order_items” en el directorio de HDFS /user/cloudera/problema1/order_items. El tipo de fichero debe de ser Avro y el tipo de compresión Snappy. 
+
+sqoop-import   --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera  --table order_items  --compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec  --target-dir /user/cloudera/problema1/order-items  --as-avrodatafile; 
+ 
+ 
+ 
+ 2.2.- Problema 4  Vamos a generar resultados intermedios con el siguiente formato de columnas:
+ ● order_date (fecha del pedido)  ● order_status (estado del pedido)  ● total_orders (número total de pedidos) ● total_amount (suma total ) 
+ 
+El resultado debería ordenarse por: ● order_date  en orden descendente ● order_status  ascendente  ● total_amount  en descendente ● total_orders  en ascendente. 
+ 
+El objetivo es encontrar el número total de orders y la cantidad total (amount) por estado y por día. 
+ 
+Las agregaciones deberían realizarse utilizando los métodos descritos más abajo: a) Utilizando la API de DataFrames - order_date debería tener el formato YYYY-MM-DD b) Utilizando Spark SQL - order_date debería tener el formato YYYY-MM-DD c) Utilizando la función CombineByKey en los RDDs. No es necesario formatear el campo order_date o total_amount. 
+ 
+Lo primero de todos vamos a unir los dos conjuntos de datos para tener un dataframe con todas las columnas necesarias. 
+
+
+[root@quickstart /]# spark-shell
+
+scala>
+val sqlContext = new org.apache.spark.sql.SQLContext(sc)
+val orders = sqlContext.read.format("com.databricks.spark.avro").load("/user/cloudera/problema1/orders")
+val order_items = sqlContext.read.avro("/user/cloudera/problema1/order-items") 
+val order_items = sqlContext.read.avro("/user/cloudera/problema1/order-items") 
+
+Crear una tabla en mysql 
+#mysql -uroot -pcloudera
+mysql>create table retail_db.result(ordered_date varchar(255) not null, order_status varchar(255) not null,total_orders int not null,total_amount numeric not null );
+
+//SQOOP importar un fichero de HDFS a una tabla de mysql
+sqoop export --table result --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username retail_dba --password cloudera --export-dir "/user/cloudera/problem1/result4a-csv" --columns "order_date,order_status,total_amount,total_orders"
+//SQOOP exportar de una tabla de mysql a hdfs
+sqoop-import   --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera  --table order_items  --compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec  --target-dir /user/cloudera/problema1/order-items  --as-avrodatafile;  
+
+//EJERCICIO 2 
+1)utilizando SQOOP copia los datos de la tabla productos a un directorio de HDFS separando los campos por "|"
+
+sqoop-import   --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera  --table products  --as-textfile  --target-dir /user/cloudera/products --fields-terminated-by '|'  ;  
+
+
+
+Table 5. Output line formatting arguments:
+
+Argument	Description
+--enclosed-by <char>	          Sets a required field enclosing character
+--escaped-by <char>	              Sets the escape character
+--fields-terminated-by <char>	  Sets the field separator character
+--lines-terminated-by <char>	  Sets the end-of-line character
+--mysql-delimiters	              Uses MySQL’s default delimiter set: fields: , lines: \n escaped-by: \ optionally-enclosed-by: '
+--optionally-enclosed-by <char>	  Sets a field enclosing character
+
+Delimiters may be specified as:
+
+a character (--fields-terminated-by X)
+an escape character (--fields-terminated-by \t). Supported escape characters are:
+
+\b (backspace)
+\n (newline)
+\r (carriage return)
+\t (tab)
+\" (double-quote)
+\\' (single-quote)
+\\ (backslash)
+\0 (NUL) - This will insert NUL characters between fields or lines, or will disable enclosing/escaping if used for one of the --enclosed-by, --optionally-enclosed-by, or --escaped-by arguments.
+
+
+2)move all the files from /user/cloudera/products folder to /user/cloudera/problem2/products folder
+[root@quickstart /]# hadoop fs -mkdir /user/cloudera/problem2
+[root@quickstart /]# hadoop fs -mkdir /user/cloudera/problem2/products
+[root@quickstart /]# hadoop fs -ls /user/cloudera/problem2/products
+
+[root@quickstart /]#hadoop fs -ls /user/cloudera/problem2/products/products
+Found 5 items
+-rw-r--r--   1 root cloudera          0 2018-03-13 08:26 /user/cloudera/problem2/products/products/_SUCCESS
+-rw-r--r--   1 root cloudera      41419 2018-03-13 08:26 /user/cloudera/problem2/products/products/part-m-00000
+-rw-r--r--   1 root cloudera      43660 2018-03-13 08:26 /user/cloudera/problem2/products/products/part-m-00001
+-rw-r--r--   1 root cloudera      42195 2018-03-13 08:26 /user/cloudera/problem2/products/products/part-m-00002
+-rw-r--r--   1 root cloudera      46719 2018-03-13 08:26 /user/cloudera/problem2/products/products/part-m-00003
+//borramos de hdfs
+[root@quickstart /]#hadoop fs -rm -f -r /user/cloudera/problem2/products/products
+[root@quickstart /]#hadoop fs mkdir /user/cloudera/problem2/products
+[root@quickstart /]#hadoop fs -mv /user/cloudera/products /user/cloudera/problem2/products/products
+3)Cambie los permisos de todos los archivos en / user / cloudera / problem2 / products de modo 
+que el propietario tenga permisos de lectura,escritura y ejecución, 
+grupo tenga permisos de lectura y escritura, 
+mientras que otros solo lean y ejecuten permisos
+
+[root@quickstart /]# hadoop fs -chmod 765 /user/cloudera/problem2/products
+
+
+
+4)
+lea los datos en /user/cloudera/problem2/products y realice las siguientes operaciones utilizando 
+a) dataframes api 
+b) spark sql 
+c) RDDs aggregateByKey method. 
+Su solución debe tener tres conjuntos de pasos. Clasifique el conjunto de datos resultante por ID de categoría
+4.1)filtre para que su RDD \ DF tenga productos cuyo precio sea inferior a 100 USD
+4.2)en el conjunto de datos filtrado, averigüe el valor más alto en la columna product_price debajo de cada categoría
+4.3)en el conjunto de datos filtrado también averigüe el total de productos en cada categoría
+4.4)en el conjunto de datos filtrados también averigüe el precio promedio del producto en cada categoría
+4.5)en el conjunto de datos filtrado también averigua el precio mínimo del producto en cada categoría
+
+
+
+
+
+
+
+
+val productosArray = sc.textFile("/user/cloudera/problem2/products/products", 4).map(linea => {val arrayString = linea.split("|");(arrayString(0).toInt, arrayString(1).toInt, arrayString(2).toString, arrayString(3).toString, arrayString(4).toFloat, arrayString(5).toString)})
+
+
+val productos = sc.textFile("/user/cloudera/problem2/products").map(p => (p.split("|")(1).toInt, p.split("|")(5).toFloat)).take(10).foreach(println)
+
+
+
+sqoop-import   --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera  --table order_items   --as-textfile  --target-dir /user/cloudera/problema1 --fields-terminated-by ',' ; 
+sc.textFile("/user/cloudera/problema1").take(100).foreach(println)
+
+val rdd1=sc.textFile("/user/cloudera/problema1").map(reg => (reg.split(",")(1).toInt,reg.split(",")(4).toFloat)).take(10).foreach(println)
+val orderItems = sc.textFile("/user/cloudera/problema1").map(orderItem => (orderItem.split(",")(1).toInt, orderItem.split(",")(4).toFloat))
+val rdd1 = orderItems.take(10).foreach(println)
+//para orderId suma de subtotal.
+val rdd2 = orderItems.reduceByKey((total, orderItemSubtotal) => total + orderItemSubtotal)
+scala> rdd2.take(10).foreach(println)
+ORDERID,SUM(SUBTOTAL)
+(18624,199.99)                                                                  
+(57436,1309.8501)
+(54040,1049.8301)
+(7608,39.99)
+(18500,449.98)
+(23556,299.95)
+(23776,329.98)
+(58592,699.85)
+(29856,1029.92)
+(32676,719.91003)
+//el valor minimo de subtotal.
+val rdd3 = orderItems.reduceByKey((total, orderItemSubtotal) => if(total< orderItemSubtotal)total else orderItemSubtotal);
+//min, max subtotal
+val orderItems4 = sc.textFile("/user/cloudera/problema1").map(orderItem => (orderItem.split(",")(1).toInt, (orderItem.split(",")(4).toFloat, orderItem.split(",")(4).toFloat)));
+orderItems3: org.apache.spark.rdd.RDD[(Int, Float, Float)] = MapPartitionsRDD[2] at map at <console>:27
+
+val rdd4 = orderItems4.reduceByKey((total, orderItemSubtotal) => (if(total._1< orderItemSubtotal._1)total._1 else orderItemSubtotal._1,if(total._2> orderItemSubtotal._2)total._2 else orderItemSubtotal._2));
+
+//min,max,count
+val orderItems5 = sc.textFile("/user/cloudera/problema1").map(orderItem => (orderItem.split(",")(1).toInt, (orderItem.split(",")(4).toFloat, orderItem.split(",")(4).toFloat,1)));
+
+val rdd5 = orderItems5.reduceByKey((total, orderItemSubtotal) => (if(total._1< orderItemSubtotal._1)total._1 else orderItemSubtotal._1,if(total._2> orderItemSubtotal._2)total._2 else orderItemSubtotal._2, total._3 + orderItemSubtotal._3));
+
+val ordItAgreg = sc.textFile("/user/cloudera/problema1").map(orderItem => (orderItem.split(",")(1).toInt,( orderItem.split(",")(4).toFloat,1)))
+val rdd1 = orderItems.take(10).foreach(println)
+//para orderId suma de subtotal.
+//lo primero es la inicializacion de los campos a calcular sumatorio de campo float orderItemSubtotal  0.0 y count 0 de los items que es un entero
+//Calcule los ingresos y la cantidad de elementos para cada pedido usando aggregateByKey
+//(iTotal, oisubtotal) => (iTotal._1 + oisubtotal._1, iTotal._2 + oisubtotal._2) se ejecuta en cada particion agregaciones parciales por key en la particion
+//(fTotal, iTotal) => (fTotal._1 + iTotal._1, fTotal._2 + iTotal._2) se ejecuta en el driver mergeando los valores parciales
+val rdd2 = orderItems.aggregateByKey((0.0, 0))((iTotal, oisubtotal) => (iTotal._1 + oisubtotal._1, iTotal._2 + oisubtotal._2),(fTotal, iTotal) => (fTotal._1 + iTotal._1, fTotal._2 + iTotal._2))
+
+((total, orderItemSubtotal) => total + orderItemSubtotal)
+scala> rdd2.take(10).foreach(println)
+
+val ordItAgreg2 = sc.textFile("/user/cloudera/problema1").map(orderItem => (orderItem.split(",")(1).toInt, orderItem.split(",")(4).toInt))
+	
+
+val rdd3 = ordItAgreg2.aggregateByKey((0.0))(math.min(_,_), math.min(_,_))
+val rdd2 = ordItAgreg2.aggregateByKey((0.0))((iTotal, oisubtotal) 
+=> ( if(iTotal._1<oisubtotal._1)iTotal._1 else oisubtotal._1) => (if(fTotal._1 < iTotal._1)fTotal._1 else iTotal._1, if(fTotal._2 > iTotal._2)fTotal._2 else iTotal._2 ));
+
+
+
+select Host,User,Password from Users;
+
+
+#problema 3 Import all tables
+
+# CUANDO SE QUIERE IMPORTAR TODAS TABLAS NO SE ESPICIFICA NINGUNA, --WAREHOUSE-DIR: ESPECIFICA LA RUTA DE HDFS EN VEZ DE TARGET-DIR: RUTA DE HDFS , EL PARAMETRO -M 1 ES PARA QUE LAS TAREAS SE EJECUTEN EN UN SOLO HILO PARA EVITAR LAS DEPENDENCIAS
+sqoop-import   --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username retail_dba  --password cloudera  --warehouse-dir /user/hive/warehouse/retail_stage.db  --compress --compression-codec snappy --as-avrodatafile  -m 1 ; 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
