@@ -263,7 +263,74 @@ hadoop fs -mkdir /user/hive/schemas
 hadoop fs -put orders.avsc /user/hive/schemas/order =>ES IGUAL hadoop fs -copyFromLocal orders.avsc /user/hive/schemas/order
 
 create external table orders_sqoop STORED AS AVRO LOCATION '/user/hive/warehouse/retail_stage.db/orders' TBLPROPERTIES ('avro.schema.url'='/user/hive/schemas/order/orders.avsc')
+#query table in impala that shows all orders belonging to a certain day. This day is when the most orders were placed. select data from order_sqoop.
+#CREAR UN QUERY SOBRE LA TABLA order_sqoop DE LOS DIAS EN LOS CUALES SE HA REALIZADP LA MAYORIA DE LOS PEDIDOS.
+[root@quickstart /]# hadoop fs -cat /user/hive/schemas/order
+{
+  "type" : "record",
+  "name" : "order_items",
+  "doc" : "Sqoop import of order_items",
+  "fields" : [ {
+    "name" : "order_item_id",
+    "type" : [ "null", "int" ],
+    "default" : null,
+    "columnName" : "order_item_id",
+    "sqlType" : "4"
+  }, {
+    "name" : "order_item_order_id",
+    "type" : [ "null", "int" ],
+    "default" : null,
+    "columnName" : "order_item_order_id",
+    "sqlType" : "4"
+  }, {
+    "name" : "order_item_product_id",
+    "type" : [ "null", "int" ],
+    "default" : null,
+    "columnName" : "order_item_product_id",
+    "sqlType" : "4"
+  }, {
+    "name" : "order_item_quantity",
+    "type" : [ "null", "int" ],
+    "default" : null,
+    "columnName" : "order_item_quantity",
+    "sqlType" : "-6"
+  }, {
+    "name" : "order_item_subtotal",
+    "type" : [ "null", "float" ],
+    "default" : null,
+    "columnName" : "order_item_subtotal",
+    "sqlType" : "7"
+  }, {
+    "name" : "order_item_product_price",
+    "type" : [ "null", "float" ],
+    "default" : null,
+    "columnName" : "order_item_product_price",
+    "sqlType" : "7"
+  } ],
+  "tableName" : "order_items"
+}
+CREATE EXTERNAL TABLE orders_sqoop
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe' 
+STORED AS 
+INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+LOCATION '/user/hive/warehouse/retail_stage.db/orders'
+TBLPROPERTIES ('avro.schema.url'='/user/hive/schemas/order');
 
+
+
+
+[root@quickstart /]# impala-shell
+Starting Impala Shell without Kerberos authentication
+Connected to quickstart.cloudera:21000
+Server version: impalad version 2.5.0-cdh5.7.0 RELEASE (build ad3f5adabedf56fe6bd9eea39147c067cc552703)
+***********************************************************************************
+Welcome to the Impala shell. Copyright (c) 2015 Cloudera, Inc. All rights reserved.
+(Impala Shell v2.5.0-cdh5.7.0 (ad3f5ad) built on Wed Mar 23 11:33:33 PDT 2016)
+
+After running a query, type SUMMARY to see a summary of where time was spent.
+***********************************************************************************
+[quickstart.cloudera:21000] > 
 
 
 
