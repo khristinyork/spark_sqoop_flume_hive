@@ -222,6 +222,27 @@ select Host,User,Password from Users;
 sqoop-import   --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username retail_dba  --password cloudera  --warehouse-dir /user/hive/warehouse/retail_stage.db  --compress --compression-codec snappy --as-avrodatafile  -m 1 ; 
 
 
+        [root@quickstart /]# hadoop fs -ls -R /user/hive/warehouse/
+	drwxr-xr-x   - root supergroup          0 2018-03-15 10:31 /user/hive/warehouse/retail_stage.db
+	drwxr-xr-x   - root supergroup          0 2018-03-15 10:28 /user/hive/warehouse/retail_stage.db/categories
+	-rw-r--r--   1 root supergroup          0 2018-03-15 10:28 /user/hive/warehouse/retail_stage.db/categories/_SUCCESS
+	-rw-r--r--   1 root supergroup       1378 2018-03-15 10:28 /user/hive/warehouse/retail_stage.db/categories/part-m-00000.avro
+	drwxr-xr-x   - root supergroup          0 2018-03-15 10:28 /user/hive/warehouse/retail_stage.db/customers
+	-rw-r--r--   1 root supergroup          0 2018-03-15 10:28 /user/hive/warehouse/retail_stage.db/customers/_SUCCESS
+	-rw-r--r--   1 root supergroup     469715 2018-03-15 10:28 /user/hive/warehouse/retail_stage.db/customers/part-m-00000.avro
+	drwxr-xr-x   - root supergroup          0 2018-03-15 10:29 /user/hive/warehouse/retail_stage.db/departments
+	-rw-r--r--   1 root supergroup          0 2018-03-15 10:29 /user/hive/warehouse/retail_stage.db/departments/_SUCCESS
+	-rw-r--r--   1 root supergroup        475 2018-03-15 10:29 /user/hive/warehouse/retail_stage.db/departments/part-m-00000.avro
+	drwxr-xr-x   - root supergroup          0 2018-03-15 10:30 /user/hive/warehouse/retail_stage.db/order_items
+	-rw-r--r--   1 root supergroup          0 2018-03-15 10:30 /user/hive/warehouse/retail_stage.db/order_items/_SUCCESS
+	-rw-r--r--   1 root supergroup    1526314 2018-03-15 10:30 /user/hive/warehouse/retail_stage.db/order_items/part-m-00000.avro
+	drwxr-xr-x   - root supergroup          0 2018-03-15 10:30 /user/hive/warehouse/retail_stage.db/orders
+	-rw-r--r--   1 root supergroup          0 2018-03-15 10:30 /user/hive/warehouse/retail_stage.db/orders/_SUCCESS
+	-rw-r--r--   1 root supergroup     660183 2018-03-15 10:30 /user/hive/warehouse/retail_stage.db/orders/part-m-00000.avro
+	drwxr-xr-x   - root supergroup          0 2018-03-15 10:31 /user/hive/warehouse/retail_stage.db/products
+	-rw-r--r--   1 root supergroup          0 2018-03-15 10:31 /user/hive/warehouse/retail_stage.db/products/_SUCCESS
+	-rw-r--r--   1 root supergroup      53592 2018-03-15 10:31 /user/hive/warehouse/retail_stage.db/products/part-m-00000.avro
+
 
 
 
