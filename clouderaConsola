@@ -309,28 +309,13 @@ create external table orders_sqoop STORED AS AVRO LOCATION '/user/hive/warehouse
   } ],
   "tableName" : "order_items"
 }
-CREATE EXTERNAL TABLE orders_sqoop
-ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe' 
-STORED AS 
-INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
-OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
-LOCATION '/user/hive/warehouse/retail_stage.db/orders'
-TBLPROPERTIES ('avro.schema.url'='/user/hive/schemas/order');
+Hive> create external table orders_sqoop
+    > STORED AS AVRO
+    > LOCATION '/user/hive/warehouse/retail_stage.db/orders'
+    > TBLPROPERTIES ('avro.schema.url'='/user/hive/schemas/order');
+OK
+Time taken: 2.02 seconds
 
-
-
-
-[root@quickstart /]# impala-shell
-Starting Impala Shell without Kerberos authentication
-Connected to quickstart.cloudera:21000
-Server version: impalad version 2.5.0-cdh5.7.0 RELEASE (build ad3f5adabedf56fe6bd9eea39147c067cc552703)
-***********************************************************************************
-Welcome to the Impala shell. Copyright (c) 2015 Cloudera, Inc. All rights reserved.
-(Impala Shell v2.5.0-cdh5.7.0 (ad3f5ad) built on Wed Mar 23 11:33:33 PDT 2016)
-
-After running a query, type SUMMARY to see a summary of where time was spent.
-***********************************************************************************
-[quickstart.cloudera:21000] > 
 
 
 
