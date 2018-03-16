@@ -333,12 +333,11 @@ Query: select * from orders_sqoop as oq where oq.order_date in (select i.order_d
 | 16074    | 1383436800000 | 11930             | PENDING_PAYMENT |
 +----------+---------------+-------------------+-----------------+
 
-
+select oq.*,from_unixtime(oq.order_date/(365*24*60*60*1000)) from orders_sqoop as oq where oq.order_date in (select i.order_date from(select order_date,count(order_id) from orders_sqoop group by order_date order by 2 desc limit 1)as i) limit 5;
 
 #SQOOP JOB
 
 sqoop job --create incjob -- import --connect jdbc:mysql://localhost:3306/test --driver com.mysql.jdbc.Driver --username it1 --password hadoop --table st1 --incremental lastmodified -check-column ts --target-dir sqin -m 1 --merge-key id
-
 
 
 
