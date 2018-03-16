@@ -315,6 +315,29 @@ Hive> create external table orders_sqoop
     > TBLPROPERTIES ('avro.schema.url'='/user/hive/schemas/order');
 OK
 Time taken: 2.02 seconds
+#QUERY EN HIVE QUE RECOGE 5 REGISTROS DE TODOS LOS PEDIDOS QUE QUE SE REALIZARON EL DIA QUE MAS PEDIDOS SE HICIERON.
+hive> select * from orders_sqoop as oq where oq.order_date in (select i.order_date from(select order_date,count(order_id) from orders_sqoop group by order_date order by 2 desc limit 1)as i) limit 5;
+# HACER LO MISMO DE ANTES EN IMPALA.
+impala-shell
+[quickstart.cloudera:21000] > invalidate metadata ;
+
+[quickstart.cloudera:21000] > select * from orders_sqoop as oq where oq.order_date in (select i.order_date from(select order_date,count(order_id) from orders_sqoop group by order_date order by 2 desc limit 1)as i) limit 5;
+Query: select * from orders_sqoop as oq where oq.order_date in (select i.order_date from(select order_date,count(order_id) from orders_sqoop group by order_date order by 2 desc limit 1)as i) limit 5
++----------+---------------+-------------------+-----------------+
+| order_id | order_date    | order_customer_id | order_status    |
++----------+---------------+-------------------+-----------------+
+| 16078    | 1383436800000 | 65                | PENDING_PAYMENT |
+| 16077    | 1383436800000 | 3407              | CLOSED          |
+| 16076    | 1383436800000 | 6833              | CANCELED        |
+| 16075    | 1383436800000 | 7051              | SUSPECTED_FRAUD |
+| 16074    | 1383436800000 | 11930             | PENDING_PAYMENT |
++----------+---------------+-------------------+-----------------+
+
+
+
+#SQOOP JOB
+
+sqoop job --create incjob -- import --connect jdbc:mysql://localhost:3306/test --driver com.mysql.jdbc.Driver --username it1 --password hadoop --table st1 --incremental lastmodified -check-column ts --target-dir sqin -m 1 --merge-key id
 
 
 
