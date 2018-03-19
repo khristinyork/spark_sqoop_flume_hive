@@ -399,7 +399,7 @@ orderTextGzip.saveAsTextFile("/user/cloudera/problem5/text-snappy-compress1", cl
    #ACTIVAR COMPRESION
    sqlContext.setConf("spark.sql.avro.compression.codec","snappy");
 # 2.- save the data to hdfs using snappy compression as avro file at /user/cloudera/problem5/avro-snappy
-
+ordersParquetSinCompress.write.format("com.databricks.spark.avro").save("/user/cloudera/problem5/avro-snappy")
 
 
 #SQOOP JOB
