@@ -335,6 +335,48 @@ Query: select * from orders_sqoop as oq where oq.order_date in (select i.order_d
 
 select oq.*,from_unixtime(oq.order_date/(365*24*60*60*1000)) from orders_sqoop as oq where oq.order_date in (select i.order_date from(select order_date,count(order_id) from orders_sqoop group by order_date order by 2 desc limit 1)as i) limit 5;
 
+#Import orders table from mysql as text file to the destination /user/cloudera/problem5/text. 
+#Fields should be terminated by a tab character (“\t”) character and lines should be terminated by new line character (“\n”).
+
+sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera --table orders  --target-dir /user/cloudera/problem5/text --as-textfile --fields-terminated-by '\t' --lines-terminated-by '\n';
+#Import orders table from mysql  into hdfs to the destination /user/cloudera/problem5/avro. File should be stored as avro file.
+sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera --table orders  --target-dir /user/cloudera/problem5/avro --as-avrodatafile ;
+#Import orders table from mysql  into hdfs  to folders /user/cloudera/problem5/parquet. File should be stored as parquet file SQOOP_PARQUET.
+
+sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera --table orders  --target-dir /user/cloudera/problem5/parquet --as-parquetfile ;
+[root@quickstart /]# hadoop fs -ls -R /user/cloudera/problem5
+drwxr-xr-x   - root cloudera          0 2018-03-19 09:47 /user/cloudera/problem5/avro
+-rw-r--r--   1 root cloudera          0 2018-03-19 09:47 /user/cloudera/problem5/avro/_SUCCESS
+-rw-r--r--   1 root cloudera     439146 2018-03-19 09:47 /user/cloudera/problem5/avro/part-m-00000.avro
+-rw-r--r--   1 root cloudera     447726 2018-03-19 09:47 /user/cloudera/problem5/avro/part-m-00001.avro
+-rw-r--r--   1 root cloudera     446959 2018-03-19 09:47 /user/cloudera/problem5/avro/part-m-00002.avro
+-rw-r--r--   1 root cloudera     447606 2018-03-19 09:47 /user/cloudera/problem5/avro/part-m-00003.avro
+drwxr-xr-x   - root cloudera          0 2018-03-19 10:00 /user/cloudera/problem5/parquet
+drwxr-xr-x   - root cloudera          0 2018-03-19 09:59 /user/cloudera/problem5/parquet/.metadata
+-rw-r--r--   1 root cloudera        184 2018-03-19 09:59 /user/cloudera/problem5/parquet/.metadata/descriptor.properties
+-rw-r--r--   1 root cloudera        707 2018-03-19 09:59 /user/cloudera/problem5/parquet/.metadata/schema.avsc
+drwxr-xr-x   - root cloudera          0 2018-03-19 09:59 /user/cloudera/problem5/parquet/.metadata/schemas
+-rw-r--r--   1 root cloudera        707 2018-03-19 09:59 /user/cloudera/problem5/parquet/.metadata/schemas/1.avsc
+drwxr-xr-x   - root cloudera          0 2018-03-19 10:00 /user/cloudera/problem5/parquet/.signals
+-rw-r--r--   1 root cloudera          0 2018-03-19 10:00 /user/cloudera/problem5/parquet/.signals/unbounded
+-rw-r--r--   1 root cloudera     147264 2018-03-19 10:00 /user/cloudera/problem5/parquet/18e8ba61-3ac0-4ab7-9784-d01e42b11d30.parquet
+-rw-r--r--   1 root cloudera     147312 2018-03-19 10:00 /user/cloudera/problem5/parquet/2c528d70-cf06-42eb-9e1e-419b79ba6ee7.parquet
+-rw-r--r--   1 root cloudera     147465 2018-03-19 10:00 /user/cloudera/problem5/parquet/5479e2f2-42b4-4ad8-b8c8-53f8a8c554f3.parquet
+-rw-r--r--   1 root cloudera     151743 2018-03-19 10:00 /user/cloudera/problem5/parquet/6590cdab-4245-402a-94d7-c778527c9aab.parquet
+drwxr-xr-x   - root cloudera          0 2018-03-19 09:44 /user/cloudera/problem5/text
+-rw-r--r--   1 root cloudera          0 2018-03-19 09:44 /user/cloudera/problem5/text/_SUCCESS
+-rw-r--r--   1 root cloudera     741614 2018-03-19 09:44 /user/cloudera/problem5/text/part-m-00000
+-rw-r--r--   1 root cloudera     753022 2018-03-19 09:44 /user/cloudera/problem5/text/part-m-00001
+-rw-r--r--   1 root cloudera     752368 2018-03-19 09:44 /user/cloudera/problem5/text/part-m-00002
+-rw-r--r--   1 root cloudera     752940 2018-03-19 09:44 /user/cloudera/problem5/text/part-m-00003
+
+#Transform/Convert data-files at /user/cloudera/problem5/avro and store the converted file at the following locations and file formats
+#  1.-save the data to hdfs using snappy compression as parquet file at /user/cloudera/problem5/parquet-snappy-compress
+#  2.-save the data to hdfs using gzip compression as text file at /user/cloudera/problem5/text-gzip-compress
+#  3.-save the data to hdfs using no compression as sequence file at /user/cloudera/problem5/sequence
+#  4.-ave the data to hdfs using snappy compression as text file at /user/cloudera/problem5/text-snappy-compress
+
+
 #SQOOP JOB
 
 sqoop job --create incjob -- import --connect jdbc:mysql://localhost:3306/test --driver com.mysql.jdbc.Driver --username it1 --password hadoop --table st1 --incremental lastmodified -check-column ts --target-dir sqin -m 1 --merge-key id
