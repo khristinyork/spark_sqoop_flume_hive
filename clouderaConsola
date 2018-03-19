@@ -401,6 +401,23 @@ orderTextGzip.saveAsTextFile("/user/cloudera/problem5/text-snappy-compress1", cl
 # 2.- save the data to hdfs using snappy compression as avro file at /user/cloudera/problem5/avro-snappy
 ordersParquetSinCompress.write.format("com.databricks.spark.avro").save("/user/cloudera/problem5/avro-snappy")
 
+# Transform/Convert data-files at /user/cloudera/problem5/avro-snappy and store the converted file at the following locations and file formats
+# 1.- save the data to hdfs using no compression as json file at /user/cloudera/problem5/json-no-compress
+   val rddAvro=sqlContext.read.format("com.databricks.spark.avro").load("/user/cloudera/problem5/avro-snappy")
+   sqlContext.setConf("spark.sql.parquet.compression.codec","uncompressed");
+   rddAvro.write.json("/user/cloudera/problem5/json-no-compress")
+   scala> rddAvro.write.json("/user/cloudera/problem5/json-no-compress") 
+	[Stage 0:>                                                          
+	([Stage 0:>                                                         
+	([Stage 0:==============>                                            
+	([Stage 0:=============================>                             
+	([Stage 0:===========================================================(
+   sqlContext.setConf("spark.sql.avro.compression.codec","snappy");
+# 2.- save the data to hdfs using gzip compression as json file at /user/cloudera/problem5/json-gzip
+   val rddAvro=sqlContext.read.format("com.databricks.spark.avro").load("/user/cloudera/problem5/avro-snappy")
+   rddAvro.write.option("spark.io.compression.codec", "gzip").json("/user/cloudera/problem5/json-gzip")
+   scala> rddAvro.write.option("spark.io.compression.codec", "gzip").json("/user/cloudera/problem5/json-gzip")
+    [Stage 1:=============================>
 
 #SQOOP JOB
 
