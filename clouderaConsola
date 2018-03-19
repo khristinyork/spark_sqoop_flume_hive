@@ -418,6 +418,12 @@ ordersParquetSinCompress.write.format("com.databricks.spark.avro").save("/user/c
    rddAvro.write.option("spark.io.compression.codec", "gzip").json("/user/cloudera/problem5/json-gzip")
    scala> rddAvro.write.option("spark.io.compression.codec", "gzip").json("/user/cloudera/problem5/json-gzip")
     [Stage 1:=============================>
+    
+#Transform/Convert data-files at  /user/cloudera/problem5/json-gzip and store the converted file at the following locations and file formats
+# 1.-save the data to as comma separated text using gzip compression at   /user/cloudera/problem5/csv-gzip
+scala> var jsonData = sqlContext.read.json("/user/cloudera/problem5/json-gzip");
+jsonData: org.apache.spark.sql.DataFrame = [order_customer_id: bigint, order_date: bigint, order_id: bigint, order_status: string]
+scala> jsonData.map(x=>x(0)+","+x(1)+","+x(2)+","+x(3)).saveAsTextFile("/user/cloudera/problem5/csv-gzip", classOf[org.apache.hadoop.io.compress.GzipCodec])
 
 #SQOOP JOB
 
