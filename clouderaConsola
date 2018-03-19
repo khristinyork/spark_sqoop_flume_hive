@@ -387,6 +387,21 @@ orders.write.option("spark.io.compression.codec", "snappy").parquet("/user/cloud
 orderTextGzip.saveAsTextFile("/user/cloudera/problem5/text-snappy-compress1", classOf[org.apache.hadoop.io.compress.SnappyCodec])
 
 
+
+#Transform/Convert data-files at /user/cloudera/problem5/parquet-snappy-compress and store the converted file at the following locations and file formats
+# 1.- save the data to hdfs using no compression as parquet file at /user/cloudera/problem5/parquet-no-compress
+
+   val ordersParquetSinCompress = sqlContext.read.parquet("/user/cloudera/problem5/parquet-snappy-compress1")
+   #DESACTIVAR COMPRESION
+   sqlContext.setConf("spark.sql.parquet.compression.codec","uncompressed");
+   #ESCRIBIR 
+   val  ordersParquetSinCompressDF=ordersParquetSinCompress.write.parquet("/user/cloudera/problem5/parquet-no-compress")
+   #ACTIVAR COMPRESION
+   sqlContext.setConf("spark.sql.avro.compression.codec","snappy");
+# 2.- save the data to hdfs using snappy compression as avro file at /user/cloudera/problem5/avro-snappy
+
+
+
 #SQOOP JOB
 
 sqoop job --create incjob -- import --connect jdbc:mysql://localhost:3306/test --driver com.mysql.jdbc.Driver --username it1 --password hadoop --table st1 --incremental lastmodified -check-column ts --target-dir sqin -m 1 --merge-key id
