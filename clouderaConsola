@@ -1,5 +1,8 @@
 #CLOUDERA EJERCICIOS.
 
+/ Contribution from Raphael L. Nascimento: 
+sqlContext.sql("SET spark.sql.parquet.compression.codec=snappy")
+
 #ARRANCAR DOCKER DE CLOUDERA
 docker run --hostname=quickstart.cloudera --privileged=true -t -i -v /home/docker-clodera:/src --publish-all=true -p 8088:8088  -p 8888:8888 -p 50090:50090 -p 50070:50070 -p 50075:50075 -p 8042:8042 -p 60030:60030 -p 25000:25000 -p 25010:25010 -p 18088:18088 -p 8983:8983 -p 11000:11000 cloudera/quickstart /usr/bin/docker-quickstart
 
@@ -426,6 +429,15 @@ jsonData: org.apache.spark.sql.DataFrame = [order_customer_id: bigint, order_dat
 scala> jsonData.map(x=>x(0)+","+x(1)+","+x(2)+","+x(3)).saveAsTextFile("/user/cloudera/problem5/csv-gzip", classOf[org.apache.hadoop.io.compress.GzipCodec])
 
 #Using spark access data at /user/cloudera/problem5/sequence and stored it back to hdfs using no compression as ORC file to HDFS to destination /user/cloudera/problem5/orc
+ sqoop import --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db"   --password cloudera   --username retail_dba   --table orders   --as-avrodatafile   --target-dir /user/cloudera/problem5/avro1   -m 1
+ import com.databricks.spark.avro
+ var dataFile = sqlContext.read.format("com.databricks.spark.avro").load("/user/cloudera/problem5/avro1");
+ dataFile.map(x=> (x(0).toString,x(0)+"\t"+x(1)+"\t"+x(2)+"\t"+x(3))).saveAsSequenceFile("/user/cloudera/problem5/sequence");
+ scala> var seqData = sc.sequenceFile("/user/cloudera/problem5/sequence/", classOf[org.apache.hadoop.io.Text], classOf[org.apache.hadoop.io.Text]);
+ seqData: org.apache.spark.rdd.RDD[(org.apache.hadoop.io.Text, org.apache.hadoop.io.Text)] = /user/cloudera/problem5/sequence/ HadoopRDD[53] at sequenceFile at <console>:28
+ 
+ seqData.map(x => { var d = x._2.toString.split("\t"); (d(0),d(1),d(2),d(3)) }).toDF().write.orc("/user/cloudera/problem5/orc");
+
 
 
 #SQOOP JOB
