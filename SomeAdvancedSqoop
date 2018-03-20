@@ -77,5 +77,37 @@ sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db  \
 --where "product_id <= 1111";
 
 
+# Using sqoop, import products_replica table from MYSQL into hdfs such that fields are separated by a ‘*’ 
+# and lines are separated by ‘\n’. Null values are represented as -1000 for numbers and “NA” for strings. 
+# Only records with product id greater than 1111 should be imported and use 5 mappers for importing. 
+# The destination file should be stored as a text file to directory  /user/cloudera/problem5/products-text-part2.
+sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db  \
+--username root --password cloudera \
+--table products_replica  \
+--target-dir /user/cloudera/problem5/products-text-part1  \
+--fields-terminated-by '*'  \
+--lines-terminated-by '\n'  \
+--null-string “NA”  \
+--null-non-string -1000  \
+-m 2  \
+--where "product_id <= 1111"
+--outdir /home/cloudera/sqoop3 \
+--boundary-query "select min(product_id), max(product_id) from products_replica where product_id > 1111";
 
+#  Using sqoop merge data available in /user/cloudera/problem5/products-text-part1 
+#  and /user/cloudera/problem5/products-text-part2 to produce a new set of files 
+# in /user/cloudera/problem5/products-text-both-parts.
+#-new-data /user/cloudera/problem5/products-text-part2 >datos nuevos
+#--onto /user/cloudera/problem5/products-text-part1 >datos viejos
+#--target-dir /user/cloudera/problem5/products-text-both-parts > ruta de union de amos ficheros
+#--merge-key product_id > clave por la que mergear o unir
+
+
+sqoop merge \
+--class-name products_replica \
+--jar-file /tmp/sqoop-cloudera/compile/products_replica.jar \
+--new-data /user/cloudera/problem5/products-text-part2 \
+--onto /user/cloudera/problem5/products-text-part1 \
+--target-dir /user/cloudera/problem5/products-text-both-parts \
+--merge-key product_id;
 
