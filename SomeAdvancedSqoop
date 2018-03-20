@@ -101,7 +101,7 @@ sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db  \
 #--onto /user/cloudera/problem5/products-text-part1 >datos viejos
 #--target-dir /user/cloudera/problem5/products-text-both-parts > ruta de union de amos ficheros
 #--merge-key product_id > clave por la que mergear o unir
-#generar el JAR DE LA TABLA
+#generar el JAR DE LA TABLA 
 $ sqoop codegen \
 --connect jdbc:mysql://localhost/userdb \
 --username root \ 
@@ -109,5 +109,12 @@ $ sqoop codegen \
 sqoop codegen --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera --table products_replica --hadoop-home /tmp/sqoop-clodera/compile 
 
 sqoop merge --class-name products_replica --jar-file /tmp/sqoop-root/compile/f29916e18f25407bfab8436a7060897f/products_replica.jar --new-data /user/cloudera/problem5/products-text-part2 --onto /user/cloudera/problem5/products-text-part1 --target-dir /user/cloudera/problem5/products-text-both-parts --merge-key product_id;
-
+#INCREMENTAL INSERT SQOOP
+# Using sqoop do the following. Read the entire steps before you create the sqoop job.
+# 1.- create a sqoop job Import Products_replica table as text file to directory /user/cloudera/problem5/products-incremental. Import all the records.
+# 2.- insert three more records to Products_replica from mysql
+# 3.- run the sqoop job again so that only newly added records can be pulled from mysql
+# 4.- insert 2 more records to Products_replica from mysql
+# 5.- run the sqoop job again so that only newly added records can be pulled from mysql
+# 6.- Validate to make sure the records have not be duplicated in HDFS
 
