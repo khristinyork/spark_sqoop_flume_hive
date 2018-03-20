@@ -11,6 +11,24 @@ Password = cloudera
 create table products_replica as select * from products;
 #Add primary key to the newly created table
 alter table products_replica add primary key (product_id);
+mysql> alter table products_replica add primary key (product_id);
+Query OK, 1345 rows affected (0.14 sec)
+Records: 1345  Duplicates: 0  Warnings: 0
+
+mysql> desc products_replica
+    -> ;
++---------------------+--------------+------+-----+---------+-------+
+| Field               | Type         | Null | Key | Default | Extra |
++---------------------+--------------+------+-----+---------+-------+
+| product_id          | int(11)      | NO   | PRI | 0       |       |
+| product_category_id | int(11)      | NO   |     | NULL    |       |
+| product_name        | varchar(45)  | NO   |     | NULL    |       |
+| product_description | varchar(255) | NO   |     | NULL    |       |
+| product_price       | float        | NO   |     | NULL    |       |
+| product_image       | varchar(255) | NO   |     | NULL    |       |
++---------------------+--------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
 #Add two more columns
 alter table products_replica add column (product_grade int, product_sentiment varchar(100));
 #Run below two update statements to modify the data
@@ -22,6 +40,22 @@ update products_replica set product_sentiment  = ‘WEAK’  where product_price
 #   Using sqoop, import products_replica table from MYSQL into hdfs 
 #   such that fields are separated by a ‘|’ and lines are separated by ‘\n’. 
 #   Null values are represented as -1 for numbers and “NOT-AVAILABLE” for strings. 
+#   CADENAS_NULAS --null-string “NOT-AVAILABLE”
+#   CAMPO_NO_CADENA_NUMERICO  --null-non-string -1
 #   Only records with product id greater than or equal to 1 and less than or 
 #   equal to 1000 should be imported and use 3 mappers for importing.
+#   Consulta de límite para usar para crear divisiones
+#   --boundary-query "select min(product_id), max(product_id) from products_replica where product_id between 1 and 1000";
 #   The destination file should be stored as a text file to directory  /user/cloudera/problem5/products-text.
+sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db  \
+--username root --password cloudera --table products_replica  \
+--compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec   \
+--target-dir /user/cloudera/problem5/products-text  \
+--fields-terminated-by '|'  \
+--lines-terminated-by '\n'  \
+--null-string “NOT-AVAILABLE”  \
+--null-non-string -1  \
+-m 3  \
+--where "product_id between 1 and 1000" \
+--outdir /home/cloudera/sqoop1 \
+--boundary-query "select min(product_id), max(product_id) from products_replica where product_id between 1 and 1000";
