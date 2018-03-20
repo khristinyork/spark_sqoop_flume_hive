@@ -101,13 +101,11 @@ sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db  \
 #--onto /user/cloudera/problem5/products-text-part1 >datos viejos
 #--target-dir /user/cloudera/problem5/products-text-both-parts > ruta de union de amos ficheros
 #--merge-key product_id > clave por la que mergear o unir
+#generar el JAR DE LA TABLA
+$ sqoop codegen \
+--connect jdbc:mysql://localhost/userdb \
+--username root \ 
+--table products_replica
 
-
-sqoop merge \
---class-name products_replica \
---jar-file /tmp/sqoop-cloudera/compile/products_replica.jar \
---new-data /user/cloudera/problem5/products-text-part2 \
---onto /user/cloudera/problem5/products-text-part1 \
---target-dir /user/cloudera/problem5/products-text-both-parts \
---merge-key product_id;
+sqoop merge --class-name products_replica --jar-file products_replica.jar --new-data /user/cloudera/problem5/products-text-part2 --onto /user/cloudera/problem5/products-text-part1 --target-dir /user/cloudera/problem5/products-text-both-parts --merge-key product_id;
 
