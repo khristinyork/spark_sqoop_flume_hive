@@ -1,15 +1,27 @@
-#Pre-work
+#PREWORK
+#CARGAR PARQUET EN UNA TABLA HIVE CON COMPRESION SNAPY
+#CARGAR PARQUET EN UNA TABLA IMPALA CON COMPRESION SNAPY
+
 #Please perform these steps before solving the problem
 
 #Login to MySQL using below commands on a fresh terminal window
-#mysql -u retail_dba -p
-#Password = cloudera
+mysql -u retail_dba -p
+Password = cloudera
 #Create a replica product table and name it products_replica
-#create table products_replica as select * from products;
+create table products_replica as select * from products;
 #Add primary key to the newly created table
-#alter table products_replica add primary key (product_id);
+alter table products_replica add primary key (product_id);
 #Add two more columns
-#alter table products_replica add column (product_grade int, product_sentiment varchar(100));
+alter table products_replica add column (product_grade int, product_sentiment varchar(100));
 #Run below two update statements to modify the data
-#update products_replica set product_grade = 1  where product_price > 500;
-#update products_replica set product_sentiment  = ‘WEAK’  where product_price between 300 and  500;
+update products_replica set product_grade = 1  where product_price > 500;
+update products_replica set product_sentiment  = ‘WEAK’  where product_price between 300 and  500;
+
+
+#Problem Statement
+#   Using sqoop, import products_replica table from MYSQL into hdfs 
+#   such that fields are separated by a ‘|’ and lines are separated by ‘\n’. 
+#   Null values are represented as -1 for numbers and “NOT-AVAILABLE” for strings. 
+#   Only records with product id greater than or equal to 1 and less than or 
+#   equal to 1000 should be imported and use 3 mappers for importing.
+#   The destination file should be stored as a text file to directory  /user/cloudera/problem5/products-text.
