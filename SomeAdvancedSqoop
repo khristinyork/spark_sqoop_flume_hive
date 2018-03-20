@@ -59,3 +59,23 @@ sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db  \
 --where "product_id between 1 and 1000" \
 --outdir /home/cloudera/sqoop1 \
 --boundary-query "select min(product_id), max(product_id) from products_replica where product_id between 1 and 1000";
+
+# Using sqoop, import products_replica table from MYSQL into hdfs such that fields are separated by a ‘*’ 
+#and lines are separated by ‘\n’. Null values are represented as -1000 for numbers and “NA” for strings. 
+# Only records with product id less than or equal to 1111 should be imported and use 2 mappers for importing.
+# The destination file should be stored as a text file to directory  /user/cloudera/problem5/products-text-part1.
+
+sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db  \
+--username root --password cloudera \
+--table products_replica  \
+--target-dir /user/cloudera/problem5/products-text-part1  \
+--fields-terminated-by '*'  \
+--lines-terminated-by '\n'  \
+--null-string “NA”  \
+--null-non-string -1000  \
+-m 2  \
+--where "product_id <= 1111";
+
+
+
+
