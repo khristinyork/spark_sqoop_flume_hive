@@ -84,7 +84,7 @@ sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db  \
 sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db  \
 --username root --password cloudera \
 --table products_replica  \
---target-dir /user/cloudera/problem5/products-text-part1  \
+--target-dir /user/cloudera/problem5/products-text-part2  \
 --fields-terminated-by '*'  \
 --lines-terminated-by '\n'  \
 --null-string “NA”  \
@@ -106,6 +106,8 @@ $ sqoop codegen \
 --connect jdbc:mysql://localhost/userdb \
 --username root \ 
 --table products_replica
+sqoop codegen --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera --table products_replica --hadoop-home /tmp/sqoop-clodera/compile 
 
-sqoop merge --class-name products_replica --jar-file products_replica.jar --new-data /user/cloudera/problem5/products-text-part2 --onto /user/cloudera/problem5/products-text-part1 --target-dir /user/cloudera/problem5/products-text-both-parts --merge-key product_id;
+sqoop merge --class-name products_replica --jar-file /tmp/sqoop-root/compile/f29916e18f25407bfab8436a7060897f/products_replica.jar --new-data /user/cloudera/problem5/products-text-part2 --onto /user/cloudera/problem5/products-text-part1 --target-dir /user/cloudera/problem5/products-text-both-parts --merge-key product_id;
+
 
