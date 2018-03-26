@@ -11,7 +11,8 @@
 #     1.2.6  Cuales son los 10 productos mas comprados por los 5 mayores clientes.
 
 #Ejercicio1
-
+#1.1.1  Desde Sqoop carga la tabla Customer de MySQL a hive 
+#############################################################
 mysql> describe orders;
 +-------------------+-------------+------+-----+---------+----------------+
 | Field             | Type        | Null | Key | Default | Extra          |
@@ -49,6 +50,44 @@ hive> show tables;
 OK
 customershive
 Time taken: 0.087 seconds, Fetched: 1 row(s)
+
+sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera \
+--split-by customer_id \
+--columns customer_id,customer_city,customer_state \
+--table customers \
+--target-dir /user/cloudera/CustomersHive \
+--fields-terminated-by "," \
+--hive-import ;
+Se crea una tabla HIVE EN LA RUTA /HIVE/WAREHOUSE/con el mismo nombre que tabla de mysql
+Loading data to table default.customers
+chgrp: changing ownership of 'hdfs://quickstart.cloudera:8020/user/hive/warehouse/customers/part-m-00000': User does not belong to supergroup
+chgrp: changing ownership of 'hdfs://quickstart.cloudera:8020/user/hive/warehouse/customers/part-m-00001': User does not belong to supergroup
+chgrp: changing ownership of 'hdfs://quickstart.cloudera:8020/user/hive/warehouse/customers/part-m-00002': User does not belong to supergroup
+chgrp: changing ownership of 'hdfs://quickstart.cloudera:8020/user/hive/warehouse/customers/part-m-00003': User does not belong to supergroup
+Table default.customers stats: [numFiles=4, totalSize=209050]
+
+
+ ############################################################################################
+ #1.1.2  Desde Sqoop cargar una tabla de MySQL en Hive creando la  desde el import de Sqoop.#
+ ############################################################################################
+ 
+[root@quickstart /]#sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera \
+ --split-by order_id \
+ --columns order_id,order_customer_id \
+--table orders \
+--target-dir /user/cloudera/ordersHive \
+--fields-terminated-by "," \
+--create-hive-table \
+--hive-database default \
+--hive-table ordersHive;
+
+[root@quickstart /]# hadoop fs -ls -R /user/cloudera
+drwxr-xr-x   - root cloudera          0 2018-03-26 09:24 /user/cloudera/ordersHive
+-rw-r--r--   1 root cloudera          0 2018-03-26 09:24 /user/cloudera/ordersHive/_SUCCESS
+-rw-r--r--   1 root cloudera     180100 2018-03-26 09:24 /user/cloudera/ordersHive/part-m-00000
+-rw-r--r--   1 root cloudera     191247 2018-03-26 09:24 /user/cloudera/ordersHive/part-m-00001
+-rw-r--r--   1 root cloudera     191374 2018-03-26 09:24 /user/cloudera/ordersHive/part-m-00002
+-rw-r--r--   1 root cloudera     191330 2018-03-26 09:24 /user/cloudera/ordersHive/part-m-00003
 
 
 
