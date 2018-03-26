@@ -222,10 +222,9 @@ drwxrwxrwx   - root supergroup          0 2018-03-26 11:04 /user/hive/warehouse/
   hiveResult.registerTempTable("product_rank_result_temp");
   hc.sql("select * from product_rank_result_temp where product_price < 100").show();
   #############################################################################################################################################################################################################################
-  6.6
-  En el conjunto de datos del paso 4, extraiga los detalles de los productos comprados por los 10 principales clientes cuyo precio es inferior a 100 USD por unidad 
+  6.6 En el conjunto de datos del paso 4, extraiga los detalles de los productos comprados por los 10 principales clientes cuyo precio es inferior a 100 USD por unidad
   [esto demuestra que puede usar subconsultas y también datos de filtro]
-  
+ 
   
   var topCustomers = hc.sql("select c.customer_id, c.customer_fname, " +
   "count(distinct(oi.order_item_product_id)) unique_products " +
@@ -242,3 +241,15 @@ drwxrwxrwx   - root supergroup          0 2018-03-26 11:04 /user/hive/warehouse/
   "inner join top_cust tc on o.order_customer_id = tc.customer_id " +
   "where p.product_price < 100");
   #############################################################################################################################################################################################################################
+  6.7 Almacene el resultado de 5 y 6 en nuevas tablas de meta store dentro de la colmena. [esto demuestra tu habilidad para usar metastore como sumidero]
+  #############################################################################################################################################################################################################################
+  hc.sql("create table problem6.product_rank_result " +
+  "as select * from product_rank_result_temp " +
+  "where product_price < 100");
+
+  hc.sql("create table problem6.top_products " +
+  "as select distinct p.* from products p " +
+  "inner join order_items oi on oi.order_item_product_id = p.product_id " + 
+  "inner join orders o on o.order_id = oi.order_item_order_id " +
+  "inner join top_cust tc on o.order_customer_id = tc.customer_id " +
+  "where p.product_price < 100");
