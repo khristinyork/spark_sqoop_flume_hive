@@ -1,3 +1,7 @@
+EN SPARK CUANDO HAY QUE REALIZAR SPARK_SQL RDD TO DATAFRAME SE USA
+// This is used to implicitly convert an RDD to a DataFrame.
+import sqlContext.implicits._
+
 #Ejercicio 1
 #1.1 Crear desde sqoop dos tablas:
 #     1.1.1  Desde Sqoop carga la tabla Customer de MySQL a hive 
@@ -89,5 +93,152 @@ drwxr-xr-x   - root cloudera          0 2018-03-26 09:24 /user/cloudera/ordersHi
 -rw-r--r--   1 root cloudera     191374 2018-03-26 09:24 /user/cloudera/ordersHive/part-m-00002
 -rw-r--r--   1 root cloudera     191330 2018-03-26 09:24 /user/cloudera/ordersHive/part-m-00003
 
+############################################################################################
+#1.2 Desde spark scala realizar join entre las dos tablas de hive customerHive y Orders:   #
+############################################################################################
 
+############################################################################################
+PROBLEMA 6
+########################################################################################################################################################################################
+6.1create a hive meta store database named problem6 and import all tables from mysql retail_db database into hive meta store.
+CREE UNA BASE DE DATOS CON LA METAINFORMACION DE LA BASE DE DATOS MYSQL EN HIVE.
+########################################################################################################################################################################################
+sqoop import-all-tables \
+  --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" \
+  --username root \
+  --password cloudera \
+  --warehouse-dir /user/hive/warehouse/problem6.db \
+  --hive-import \
+  --hive-database problem6 \
+  --create-hive-table \
+  --as-textfile;
+  sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera \
+  --warehouse-dir /user/hive/warehouse/problem6.db \
+  --hive-import \
+--table orders \
+--hive-database problem6 \
+--create-hive-table \
+--hive-table orders;
+ sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera \
+  --warehouse-dir /user/hive/warehouse/problem6.db \
+  --hive-import \
+--table order_items \
+--hive-database problem6 \
+--create-hive-table \
+--hive-table order_items;
+sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera \
+  --warehouse-dir /user/hive/warehouse/problem6.db \
+  --hive-import \
+--table products \
+--hive-database problem6 \
+--create-hive-table \
+--hive-table products;
+sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera   --warehouse-dir /user/hive/warehouse/problem6.db   --hive-import --table products --hive-database problem6 --create-hive-table --hive-table products;
+sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera \
+  --warehouse-dir /user/hive/warehouse/problem6.db \
+  --hive-import \
+--table departments \
+--hive-database problem6 \
+--create-hive-table \
+--hive-table departments;
+[root@quickstart /]# hadoop fs  -ls -R /user/hive
+drwxrwxrwx   - hive supergroup          0 2018-03-26 14:33 /user/hive/warehouse
+drwxrwxrwx   - root supergroup          0 2018-03-26 09:08 /user/hive/warehouse/customers
+-rwxrwxrwx   1 root cloudera        50847 2018-03-26 09:07 /user/hive/warehouse/customers/part-m-00000
+-rwxrwxrwx   1 root cloudera        51983 2018-03-26 09:07 /user/hive/warehouse/customers/part-m-00001
+-rwxrwxrwx   1 root cloudera        51939 2018-03-26 09:07 /user/hive/warehouse/customers/part-m-00002
+-rwxrwxrwx   1 root cloudera        54281 2018-03-26 09:07 /user/hive/warehouse/customers/part-m-00003
+drwxrwxrwx   - root supergroup          0 2018-03-26 08:43 /user/hive/warehouse/customershive
+drwxrwxrwx   - root supergroup          0 2018-03-26 08:11 /user/hive/warehouse/ejercicios.db
+drwxr-xr-x   - root supergroup          0 2018-03-26 14:57 /user/hive/warehouse/problem6.db
+drwxr-xr-x   - root supergroup          0 2018-03-26 14:35 /user/hive/warehouse/problem6.db/categories
+-rw-r--r--   1 root supergroup          0 2018-03-26 14:35 /user/hive/warehouse/problem6.db/categories/_SUCCESS
+-rw-r--r--   1 root supergroup        271 2018-03-26 14:35 /user/hive/warehouse/problem6.db/categories/part-m-00000
+-rw-r--r--   1 root supergroup        263 2018-03-26 14:35 /user/hive/warehouse/problem6.db/categories/part-m-00001
+-rw-r--r--   1 root supergroup        266 2018-03-26 14:35 /user/hive/warehouse/problem6.db/categories/part-m-00002
+-rw-r--r--   1 root supergroup        229 2018-03-26 14:35 /user/hive/warehouse/problem6.db/categories/part-m-00003
+drwxr-xr-x   - root supergroup          0 2018-03-26 14:57 /user/hive/warehouse/problem6.db/departments
+-rw-r--r--   1 root supergroup          0 2018-03-26 14:57 /user/hive/warehouse/problem6.db/departments/_SUCCESS
+-rw-r--r--   1 root supergroup         21 2018-03-26 14:57 /user/hive/warehouse/problem6.db/departments/part-m-00000
+-rw-r--r--   1 root supergroup         10 2018-03-26 14:57 /user/hive/warehouse/problem6.db/departments/part-m-00001
+-rw-r--r--   1 root supergroup          7 2018-03-26 14:57 /user/hive/warehouse/problem6.db/departments/part-m-00002
+-rw-r--r--   1 root supergroup         22 2018-03-26 14:57 /user/hive/warehouse/problem6.db/departments/part-m-00003
+drwxr-xr-x   - root supergroup          0 2018-03-26 14:51 /user/hive/warehouse/problem6.db/order_items
+-rw-r--r--   1 root supergroup          0 2018-03-26 14:51 /user/hive/warehouse/problem6.db/order_items/_SUCCESS
+-rw-r--r--   1 root supergroup    1303818 2018-03-26 14:51 /user/hive/warehouse/problem6.db/order_items/part-m-00000
+-rw-r--r--   1 root supergroup    1343222 2018-03-26 14:51 /user/hive/warehouse/problem6.db/order_items/part-m-00001
+-rw-r--r--   1 root supergroup    1371917 2018-03-26 14:51 /user/hive/warehouse/problem6.db/order_items/part-m-00002
+-rw-r--r--   1 root supergroup    1389923 2018-03-26 14:51 /user/hive/warehouse/problem6.db/order_items/part-m-00003
+drwxr-xr-x   - root supergroup          0 2018-03-26 14:44 /user/hive/warehouse/problem6.db/orders
+-rw-r--r--   1 root supergroup          0 2018-03-26 14:44 /user/hive/warehouse/problem6.db/orders/_SUCCESS
+-rw-r--r--   1 root supergroup     741614 2018-03-26 14:44 /user/hive/warehouse/problem6.db/orders/part-m-00000
+-rw-r--r--   1 root supergroup     753022 2018-03-26 14:44 /user/hive/warehouse/problem6.db/orders/part-m-00001
+-rw-r--r--   1 root supergroup     752368 2018-03-26 14:44 /user/hive/warehouse/problem6.db/orders/part-m-00002
+-rw-r--r--   1 root supergroup     752940 2018-03-26 14:44 /user/hive/warehouse/problem6.db/orders/part-m-00003
+drwxr-xr-x   - root supergroup          0 2018-03-26 14:54 /user/hive/warehouse/problem6.db/products
+-rw-r--r--   1 root supergroup          0 2018-03-26 14:54 /user/hive/warehouse/problem6.db/products/_SUCCESS
+-rw-r--r--   1 root supergroup      41419 2018-03-26 14:54 /user/hive/warehouse/problem6.db/products/part-m-00000
+-rw-r--r--   1 root supergroup      43660 2018-03-26 14:54 /user/hive/warehouse/problem6.db/products/part-m-00001
+-rw-r--r--   1 root supergroup      42195 2018-03-26 14:54 /user/hive/warehouse/problem6.db/products/part-m-00002
+-rw-r--r--   1 root supergroup      46719 2018-03-26 14:54 /user/hive/warehouse/problem6.db/products/part-m-00003
+drwxrwxrwx   - root supergroup          0 2018-03-26 11:04 /user/hive/warehouse/src
 
+  ########################################################################################################################################################################################
+  6.2
+  En spark shell use los datos disponibles en meta store como fuente y realice los pasos 3,4,5 y 6. [esto demuestra su capacidad para usar meta store como fuente]
+  #############################################################################################################################################################################################################################
+  // Step 2
+  var hc = new org.apache.spark.sql.hive.HiveContext(sc);
+  #############################################################################################################################################################################################################################
+  6.3
+  Clasifique los productos dentro del departamento por precio y ordene por departamento ascendente y rango descendente [esto demuestra que puede producir datos ordenados y ordenados en conjuntos de datos unidos]
+  ###########################################################################################################################################################################################################################
+  
+  var hiveResult = hc.sql("select d.department_id, " +
+  "p.product_id, p.product_name, p.product_price, " +
+  "rank() over (partition by d.department_id order by p.product_price) as product_price_rank, " +
+  "dense_rank() over (partition by d.department_id order by p.product_price) as product_dense_price_rank " +
+  "from products p inner join categories c on c.category_id = p.product_category_id " +
+  "inner join departments d on c.category_department_id = d.department_id " +
+  "order by d.department_id, product_price_rank desc, product_dense_price_rank");
+  
+  
+ #############################################################################################################################################################################################################################
+  6.4 Encuentre los 10 mejores clientes que tengan la mayoría de las compras únicas de productos. Si más de un cliente tiene el mismo número de compras de productos, 
+  entonces el cliente con el menor id_cliente tendrá prioridad
+  [esto demuestra que puede producir estadísticas agregadas en conjuntos de datos unidos]
+ #############################################################################################################################################################################################################################
+ var hiveResult2 = hc.sql("select c.customer_id, c.customer_fname, " +
+  "count(distinct(oi.order_item_product_id)) unique_products " +
+  "from customers c inner join orders o on o.order_customer_id = c.customer_id " +
+  "inner join order_items oi on o.order_id = oi.order_item_order_id " +
+  "group by c.customer_id, c.customer_fname " +
+  "order by unique_products desc, c.customer_id limit 10")
+ #############################################################################################################################################################################################################################
+  6.5 En el conjunto de datos del paso 3, aplique el filtro de modo que solo se extraigan productos de menos de 100 
+  [esto demuestra que puede usar subconsultas y también datos de filtro]
+ 
+  
+  hiveResult.registerTempTable("product_rank_result_temp");
+  hc.sql("select * from product_rank_result_temp where product_price < 100").show();
+  #############################################################################################################################################################################################################################
+  6.6
+  En el conjunto de datos del paso 4, extraiga los detalles de los productos comprados por los 10 principales clientes cuyo precio es inferior a 100 USD por unidad 
+  [esto demuestra que puede usar subconsultas y también datos de filtro]
+  
+  
+  var topCustomers = hc.sql("select c.customer_id, c.customer_fname, " +
+  "count(distinct(oi.order_item_product_id)) unique_products " +
+  "from customers c inner join orders o on o.order_customer_id = c.customer_id " +
+  "inner join order_items oi on o.order_id = oi.order_item_order_id " +
+  "group by c.customer_id, c.customer_fname " +
+  "order by unique_products desc, c.customer_id limit 10");
+
+   topCustomers.registerTempTable("top_cust");
+
+  var topProducts = hc.sql("select distinct p.* from " +
+  "products p inner join order_items oi on oi.order_item_product_id = p.product_id " +
+  "inner join orders o on o.order_id = oi.order_item_order_id " +
+  "inner join top_cust tc on o.order_customer_id = tc.customer_id " +
+  "where p.product_price < 100");
+  #############################################################################################################################################################################################################################
