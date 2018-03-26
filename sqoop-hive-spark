@@ -9,3 +9,46 @@
 #     1.2.4  Cuales son los 10 mayores clientes.
 #     1.2.5  Cual es el producto mas comprado por los clientes en cada cuidad
 #     1.2.6  Cuales son los 10 productos mas comprados por los 5 mayores clientes.
+
+#Ejercicio1
+
+mysql> describe orders;
++-------------------+-------------+------+-----+---------+----------------+
+| Field             | Type        | Null | Key | Default | Extra          |
++-------------------+-------------+------+-----+---------+----------------+
+| order_id          | int(11)     | NO   | PRI | NULL    | auto_increment |
+| order_date        | datetime    | NO   |     | NULL    |                |
+| order_customer_id | int(11)     | NO   |     | NULL    |                |
+| order_status      | varchar(45) | NO   |     | NULL    |                |
++-------------------+-------------+------+-----+---------+----------------+
+mysql> describe customers;
++-------------------+--------------+------+-----+---------+----------------+
+| Field             | Type         | Null | Key | Default | Extra          |
++-------------------+--------------+------+-----+---------+----------------+
+| customer_id       | int(11)      | NO   | PRI | NULL    | auto_increment |
+| customer_fname    | varchar(45)  | NO   |     | NULL    |                |
+| customer_lname    | varchar(45)  | NO   |     | NULL    |                |
+| customer_email    | varchar(45)  | NO   |     | NULL    |                |
+| customer_password | varchar(45)  | NO   |     | NULL    |                |
+| customer_street   | varchar(255) | NO   |     | NULL    |                |
+| customer_city     | varchar(45)  | NO   |     | NULL    |                |
+| customer_state    | varchar(45)  | NO   |     | NULL    |                |
+| customer_zipcode  | varchar(45)  | NO   |     | NULL    |                |
++-------------------+--------------+------+-----+---------+----------------+
+
+hive>  CREATE TABLE IF NOT EXISTS customersHive ( customer_id int, customer_city  String,
+    >  customer_state String)
+    >  COMMENT 'CustomersHive details'
+    >  ROW FORMAT DELIMITED
+    >  FIELDS TERMINATED BY '\t'
+    >  LINES TERMINATED BY '\n'
+    >  STORED AS TEXTFILE;
+OK
+Time taken: 0.676 seconds
+hive> show tables;
+OK
+customershive
+Time taken: 0.087 seconds, Fetched: 1 row(s)
+
+
+
