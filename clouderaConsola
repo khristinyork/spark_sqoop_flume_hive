@@ -328,7 +328,7 @@ impala-shell
 Query: select * from orders_sqoop as oq where oq.order_date in (select i.order_date from(select order_date,count(order_id) from orders_sqoop group by order_date order by 2 desc limit 1)as i) limit 5
 +----------+---------------+-------------------+-----------------+
 | order_id | order_date    | order_customer_id | order_status    |
-+----------+---------------+-------------------+-----------------+
++----------+---------------+-------------------+-----------------+ 
 | 16078    | 1383436800000 | 65                | PENDING_PAYMENT |
 | 16077    | 1383436800000 | 3407              | CLOSED          |
 | 16076    | 1383436800000 | 6833              | CANCELED        |
