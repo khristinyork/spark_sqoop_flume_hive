@@ -1,1 +1,11 @@
-
+#Ejercicio 1
+#1.1 Crear desde sqoop dos tablas:
+#     1.1.1  Desde Sqoop carga la tabla Customer de MySQL a hive 
+#     1.1.2  Desde Sqoop cargar una tabla de MySQL en Hive creando la  desde el import de Sqoop.
+#1.2 Desde spark scala realizar join entre las dos tablas de hive customerHive y Orders:
+#     1.2.1  Calcular cuantos pedidos se realizan por ciudad y cliente
+#     1.2.2  Cual es la cuidad que realiza mas pedidos.
+#     1.2.3  Cuales son los clientes que mas compran por cuidad.
+#     1.2.4  Cuales son los 10 mayores clientes.
+#     1.2.5  Cual es el producto mas comprado por los clientes en cada cuidad
+#     1.2.6  Cuales son los 10 productos mas comprados por los 5 mayores clientes.
