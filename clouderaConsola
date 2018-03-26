@@ -439,7 +439,6 @@ scala> jsonData.map(x=>x(0)+","+x(1)+","+x(2)+","+x(3)).saveAsTextFile("/user/cl
  seqData.map(x => { var d = x._2.toString.split("\t"); (d(0),d(1),d(2),d(3)) }).toDF().write.orc("/user/cloudera/problem5/orc");
 
 
-
 #SQOOP JOB
 
 sqoop job --create incjob -- import --connect jdbc:mysql://localhost:3306/test --driver com.mysql.jdbc.Driver --username it1 --password hadoop --table st1 --incremental lastmodified -check-column ts --target-dir sqin -m 1 --merge-key id
