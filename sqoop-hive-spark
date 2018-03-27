@@ -112,6 +112,21 @@ sqoop import-all-tables \
   --hive-database problem6 \
   --create-hive-table \
   --as-textfile;
+  
+  sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera \
+  --warehouse-dir /user/hive/warehouse/problem6.db \
+  --hive-import \
+--table customers \
+--hive-database problem6 \
+--create-hive-table \
+--hive-table customers;
+ sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera \
+  --warehouse-dir /user/hive/warehouse/problem6.db \
+  --hive-import \
+--table categories \
+--hive-database problem6 \
+--create-hive-table \
+--hive-table categories;
   sqoop import --connect jdbc:mysql://quickstart.cloudera:3306/retail_db --username root --password cloudera \
   --warehouse-dir /user/hive/warehouse/problem6.db \
   --hive-import \
