@@ -1,31 +1,27 @@
 # Name the source, channel and sink
-step1.sources = avro-source  
-step1.channels = jdbc-channel
-step1.sinks = file-sink
+agent1.sources = avro
+agent1.channels = jdbc
+agent1.sinks = hdfsSink
 
 # Source configuration
-step1.sources.avro-source.type = avro
-step1.sources.avro-source.port = 11112
-step1.sources.avro-source.bind = localhost
-
+agent1.sources.avro.bind=localhost
+agent1.sources.avro.port=11112
+agent1.source.avro.type=avro
+agent1.source.avro.channels=jdbc
 
 # Describe the sink
-step1.sinks.file-sink.type = hdfs
-step1.sinks.file-sink.hdfs.path = /user/cloudera/problem7/sink
-step1.sinks.file-sink.hdfs.fileType = DataStream
-step1.sinks.file-sink.hdfs.fileSuffix = .avro
-step1.sinks.file-sink.serializer = avro_event
-step1.sinks.file-sink.serializer.compressionCodec=snappy
-
-# Describe the type of channel --  Use memory channel if jdbc channel does not work
-step1.channels.jdbc-channel.type = jdbc
-
-# Bind the source and sink to the channel
-step1.sources.avro-source.channels = jdbc-channel
-step1.sinks.file-sink.channel = jdbc-channel
+agent1.sinks.hdfsSink.type = hdfs
+agent1.sink.hdfsSink.path = /user/cloudera/problem7/sink
+agent1.sinks.hdfsSink.serializer = avro_event
+agent1.sinks.hdfsSink.path = /user/cloudera/problem7/sink
+agent1.sinks.hdfsSink.fileType = DataStream
+agent1.sinks.hdfsSink.hdfs.fileSuffix = .avro
+agent1.sinks.hdfsSink.serializer = avro_event
+agent1.sinks.hdfsSink.channel = jdbc-channel
+#step1.sinks.file-sink.serializer.compressionCodec=snappy
 
 // Run the flume agent
 
-flume-ng agent --name step1 --conf . --conf-file f.config
+flume-ng agent --name agent1 --conf . --conf-file flume-conf.conf
 
 // Run the flume Avro client
