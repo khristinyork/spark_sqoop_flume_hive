@@ -594,6 +594,34 @@ OK
 1	AFRICA	Good Business Region for HadoopExam.com	16	Uganda	Reference site http://www.QuickTechie.com
 Time taken: 0.127 seconds, Fetched: 5 row(s)
 
+hive> insert overwrite table region 
+    > select split(data,'\\|')[0] r_regionkey,
+    > split(data,'\\|')[1] r_name,
+    > split(data,'\\|')[2] r_commet,
+    > array(named_struct("n_nationkey",cast(split(split(data,'\\|')[3],",")[0] as smallint),"n_name",split(split(data,'\\|')[3],",")[1],"n_comment",split(split(data,'\\|')[3],",")[2] )) from tempresgion;
+Query ID = root_20180405104747_79e1b18a-be6b-48f1-b2a3-cb15c2658c99
+Total jobs = 3
+Launching Job 1 out of 3
+Number of reduce tasks is set to 0 since there's no reduce operator
+Starting Job = job_1522922964151_0006, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1522922964151_0006/
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1522922964151_0006
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 0
+2018-04-05 14:12:59,110 Stage-1 map = 0%,  reduce = 0%
+2018-04-05 14:13:05,401 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 2.28 sec
+MapReduce Total cumulative CPU time: 2 seconds 280 msec
+Ended Job = job_1522922964151_0006
+Stage-4 is selected by condition resolver.
+Stage-3 is filtered out by condition resolver.
+Stage-5 is filtered out by condition resolver.
+Moving data to: hdfs://quickstart.cloudera:8020/user/hive/warehouse/region/.hive-staging_hive_2018-04-05_14-12-51_476_533907710585064828-1/-ext-10000
+Loading data to table default.region
+Table default.region stats: [numFiles=1, numRows=26, totalSize=2432, rawDataSize=104]
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1   Cumulative CPU: 2.28 sec   HDFS Read: 7580 HDFS Write: 2503 SUCCESS
+Total MapReduce CPU Time Spent: 2 seconds 280 msec
+OK
+Time taken: 15.416 seconds
+hive> 
 
 
 
