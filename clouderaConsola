@@ -452,15 +452,15 @@ sqoop job --create incjob -- import --connect jdbc:mysql://localhost:3306/test -
 #	r_nations   array<struct<n_nationkey:smallint,n_name:string,n_comment:string>> 
 
 hive> Create external table if not exists Region
-    > (
-    > r_regionkey smallint,
-    > r_name string,
-    > r_comment string,
-    > r_nations array <struct<n_nationkey:smallint,n_name:string,n_comment:string>> 
-    > )ROW FORMAT DELIMITED
-    > FIELDS TERMINATED  BY '|'
-    > COLLECTION ITEMS TERMINATED BY ','
-    > STORED AS PARQUET;
+     (
+     r_regionkey smallint,
+     r_name string,
+     r_comment string,
+     r_nations array <struct<n_nationkey:smallint,n_name:string,n_comment:string>> 
+     )ROW FORMAT DELIMITED
+     FIELDS TERMINATED  BY '|'
+     COLLECTION ITEMS TERMINATED BY ','
+     STORED AS PARQUET;
 #2. Once table is created , load data in this table from region.csv
 #Data for region table : region.csv
 r_regionkey|r_name|r_comment|r_nations &amp;lt;n_nationkey,n_name,n_comment>
@@ -621,7 +621,21 @@ Stage-Stage-1: Map: 1   Cumulative CPU: 2.28 sec   HDFS Read: 7580 HDFS Write: 2
 Total MapReduce CPU Time Spent: 2 seconds 280 msec
 OK
 Time taken: 15.416 seconds
-hive> 
+Time taken: 0.131 seconds, Fetched: 26 row(s)
+hive> select * from region limit 10;
+OK
+1	AFRICA	Good Business Region for HadoopExam.com	[{"n_nationkey":0,"n_name":"Cameroon","n_comment":"Reference site http://www.QuickTechie.com"}]
+1	AFRICA	Good Business Region for Training4Exam.com	[{"n_nationkey":5,"n_name":"Egypt","n_comment":"Reference site http://www.HadoopExam.com"}]
+1	AFRICA	Good Business Region for HadoopExam.com	[{"n_nationkey":14,"n_name":"Namibia","n_comment":"Reference site http://www.QuickTechie.com"}]
+1	AFRICA	Good Business Region for Training4Exam.com	[{"n_nationkey":15,"n_name":"Zimbabwe","n_comment":"Reference site http://www.HadoopExam.com"}]
+1	AFRICA	Good Business Region for HadoopExam.com	[{"n_nationkey":16,"n_name":"Uganda","n_comment":"Reference site http://www.QuickTechie.com"}]
+2	AMERICA	Average Business Region for HadoopExam.com	[{"n_nationkey":1,"n_name":"United States","n_comment":"Reference site http://www.HadoopExam.com"}]
+2	AMERICA	Average Business Region for Training4Exam.com	[{"n_nationkey":2,"n_name":"Canada","n_comment":"Reference site http://www.HadoopExam.com"}]
+2	AMERICA	Average Business Region for HadoopExam.com	[{"n_nationkey":3,"n_name":"Cuba","n_comment":"Reference site http://www.QuickTechie.com"}]
+2	AMERICA	Average Business Region for Training4Exam.com	[{"n_nationkey":17,"n_name":"Costa Rica","n_comment":"Reference site http://www.HadoopExam.com"}]
+2	AMERICA	Average Business Region for HadoopExam.com	[{"n_nationkey":24,"n_name":"Panama","n_comment":"Reference site http://www.HadoopExam.com"}]
+Time taken: 0.115 seconds, Fetched: 10 row(s)
+ 
 
 
 
