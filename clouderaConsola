@@ -444,13 +444,155 @@ scala> jsonData.map(x=>x(0)+","+x(1)+","+x(2)+","+x(3)).saveAsTextFile("/user/cl
 sqoop job --create incjob -- import --connect jdbc:mysql://localhost:3306/test --driver com.mysql.jdbc.Driver --username it1 --password hadoop --table st1 --incremental lastmodified -check-column ts --target-dir sqin -m 1 --merge-key id
 
 
+#Problem Scenario 3: Please accomplish following activities. 
+#1.  Create a table region with following structure. However, underline file format should be parquet in HDFS.
+#	r_regionkey smallint,
+#	r_name      string,
+#	r_comment   string,
+#	r_nations   array<struct<n_nationkey:smallint,n_name:string,n_comment:string>> 
+
+hive> Create external table if not exists Region
+    > (
+    > r_regionkey smallint,
+    > r_name string,
+    > r_comment string,
+    > r_nations array <struct<n_nationkey:smallint,n_name:string,n_comment:string>> 
+    > )ROW FORMAT DELIMITED
+    > FIELDS TERMINATED  BY '|'
+    > COLLECTION ITEMS TERMINATED BY ','
+    > STORED AS PARQUET;
+#2. Once table is created , load data in this table from region.csv
+#Data for region table : region.csv
+r_regionkey|r_name|r_comment|r_nations &amp;lt;n_nationkey,n_name,n_comment>
+1|AFRICA|Good Business Region for HadoopExam.com|0,Cameroon,Reference site http://www.QuickTechie.com
+1|AFRICA|Good Business Region for Training4Exam.com|5,Egypt,Reference site http://www.HadoopExam.com
+1|AFRICA|Good Business Region for HadoopExam.com|14,Namibia,Reference site http://www.QuickTechie.com
+1|AFRICA|Good Business Region for Training4Exam.com|15,Zimbabwe,Reference site http://www.HadoopExam.com
+1|AFRICA|Good Business Region for HadoopExam.com|16,Uganda,Reference site http://www.QuickTechie.com
+2|AMERICA|Average Business Region for HadoopExam.com|1,United States,Reference site http://www.HadoopExam.com
+2|AMERICA|Average Business Region for Training4Exam.com|2,Canada,Reference site http://www.HadoopExam.com
+2|AMERICA|Average Business Region for HadoopExam.com|3,Cuba,Reference site http://www.QuickTechie.com
+2|AMERICA|Average Business Region for Training4Exam.com|17,Costa Rica,Reference site http://www.HadoopExam.com
+2|AMERICA|Average Business Region for HadoopExam.com|24,Panama,Reference site http://www.HadoopExam.com
+3|ASIA|Best Business Region for Training4Exam.com|8,India,Reference site http://www.QuickTechie.com
+3|ASIA|Best Business Region for HadoopExam.com|9,China,Reference site http://www.HadoopExam.com
+3|ASIA|Best Business Region for Training4Exam.com|12,Japan,Reference site http://www.QuickTechie.com
+3|ASIA|Best Business Region for HadoopExam.com|18,Russia,Reference site http://www.HadoopExam.com
+3|ASIA|Best Business Region for Training4Exam.com|21,Israel,Reference site http://www.QuickTechie.com
+4|EUROPE|Low sale Business Region for HadoopExam.com|6,Austria,Reference site http://www.HadoopExam.com
+4|EUROPE|Low sale Business Region for Training4Exam.com|7,Bulgaria,Reference site http://www.QuickTechie.com
+4|EUROPE|Low sale Business Region for HadoopExam.com|19,Belgium,Reference site http://www.HadoopExam.com
+4|EUROPE|Low sale Business Region for Training4Exam.com|22,Croatia,Reference site http://www.QuickTechie.com
+4|EUROPE|Low sale Business Region for HadoopExam.com|23,Denmark,Reference site http://www.HadoopExam.com
+5|MIDDLE EAST|Ok Ok sale Business Region for HadoopExam.com|4,Saudi Arabia,Reference site http://www.QuickTechie.com
+5|MIDDLE EAST|Ok Ok sale Business Region for Training4Exam.com|10,Yemen,Reference site http://www.HadoopExam.com
+5|MIDDLE EAST|Ok Ok sale Business Region for HadoopExam.com|11,Oman,Reference site http://www.QuickTechie.com
+5|MIDDLE EAST|Ok Ok sale Business Region for Training4Exam.com|13,Kuwait,Reference site http://www.HadoopExam.com
+5|MIDDLE EAST|Ok Ok sale Business Region for HadoopExam.com|20,Qatar,Reference site http://www.QuickTechie.com#
 
 
 
 
 
+[root@quickstart /]#echo "r_regionkey|r_name|r_comment|r_nations &amp;lt;n_nationkey,n_name,n_comment>
+1|AFRICA|Good Business Region for HadoopExam.com|0,Cameroon,Reference site http://www.QuickTechie.com
+1|AFRICA|Good Business Region for Training4Exam.com|5,Egypt,Reference site http://www.HadoopExam.com
+1|AFRICA|Good Business Region for HadoopExam.com|14,Namibia,Reference site http://www.QuickTechie.com
+1|AFRICA|Good Business Region for Training4Exam.com|15,Zimbabwe,Reference site http://www.HadoopExam.com
+1|AFRICA|Good Business Region for HadoopExam.com|16,Uganda,Reference site http://www.QuickTechie.com
+2|AMERICA|Average Business Region for HadoopExam.com|1,United States,Reference site http://www.HadoopExam.com
+2|AMERICA|Average Business Region for Training4Exam.com|2,Canada,Reference site http://www.HadoopExam.com
+2|AMERICA|Average Business Region for HadoopExam.com|3,Cuba,Reference site http://www.QuickTechie.com
+2|AMERICA|Average Business Region for Training4Exam.com|17,Costa Rica,Reference site http://www.HadoopExam.com
+2|AMERICA|Average Business Region for HadoopExam.com|24,Panama,Reference site http://www.HadoopExam.com
+3|ASIA|Best Business Region for Training4Exam.com|8,India,Reference site http://www.QuickTechie.com
+3|ASIA|Best Business Region for HadoopExam.com|9,China,Reference site http://www.HadoopExam.com
+3|ASIA|Best Business Region for Training4Exam.com|12,Japan,Reference site http://www.QuickTechie.com
+3|ASIA|Best Business Region for HadoopExam.com|18,Russia,Reference site http://www.HadoopExam.com
+3|ASIA|Best Business Region for Training4Exam.com|21,Israel,Reference site http://www.QuickTechie.com
+4|EUROPE|Low sale Business Region for HadoopExam.com|6,Austria,Reference site http://www.HadoopExam.com
+4|EUROPE|Low sale Business Region for Training4Exam.com|7,Bulgaria,Reference site http://www.QuickTechie.com
+4|EUROPE|Low sale Business Region for HadoopExam.com|19,Belgium,Reference site http://www.HadoopExam.com
+4|EUROPE|Low sale Business Region for Training4Exam.com|22,Croatia,Reference site http://www.QuickTechie.com
+4|EUROPE|Low sale Business Region for HadoopExam.com|23,Denmark,Reference site http://www.HadoopExam.com
+5|MIDDLE EAST|Ok Ok sale Business Region for HadoopExam.com|4,Saudi Arabia,Reference site http://www.QuickTechie.com
+5|MIDDLE EAST|Ok Ok sale Business Region for Training4Exam.com|10,Yemen,Reference site http://www.HadoopExam.com
+5|MIDDLE EAST|Ok Ok sale Business Region for HadoopExam.com|11,Oman,Reference site http://www.QuickTechie.com
+5|MIDDLE EAST|Ok Ok sale Business Region for Training4Exam.com|13,Kuwait,Reference site http://www.HadoopExam.com
+5|MIDDLE EAST|Ok Ok sale Business Region for HadoopExam.com|20,Qatar,Reference site http://www.QuickTechie.com#
+" > Region.csv
+
+[root@quickstart /]# hadoop fs -mkdir /user/cloudera/hadoop
+[root@quickstart /]# hadoop fs -mkdir /user/cloudera/hadoop/exam
+[root@quickstart /]# awk 'NR != 1 {print}' Region.csv | hdfs dfs -put - /user/cloudera/hadoop/exam/region.csv
+
+[root@quickstart /]# hadoop fs -cat /user/cloudera/hadoop/exam/region.csv
+1|AFRICA|Good Business Region for HadoopExam.com|0,Cameroon,Reference site http://www.QuickTechie.com
+1|AFRICA|Good Business Region for Training4Exam.com|5,Egypt,Reference site http://www.HadoopExam.com
+[root@quickstaawk 'NR != 1 {print}' Region.csv | hdfs dfs -put -s -cat  /user/cloudera/hadoop/exam/region.c
+[root@quickstart /]#  hdfs dfs -cat /user/cloudera/hadoop/exam/region.csv
+1|AFRICA|Good Business Region for HadoopExam.com|0,Cameroon,Reference site http://www.QuickTechie.com
+1|AFRICA|Good Business Region for Training4Exam.com|5,Egypt,Reference site http://www.HadoopExam.com
+1|AFRICA|Good Business Region for HadoopExam.com|14,Namibia,Reference site http://www.QuickTechie.com
+1|AFRICA|Good Business Region for Training4Exam.com|15,Zimbabwe,Reference site http://www.HadoopExam.com
+1|AFRICA|Good Business Region for HadoopExam.com|16,Uganda,Reference site http://www.QuickTechie.com
+2|AMERICA|Average Business Region for HadoopExam.com|1,United States,Reference site http://www.HadoopExam.com
+2|AMERICA|Average Business Region for Training4Exam.com|2,Canada,Reference site http://www.HadoopExam.com
+2|AMERICA|Average Business Region for HadoopExam.com|3,Cuba,Reference site http://www.QuickTechie.com
+2|AMERICA|Average Business Region for Training4Exam.com|17,Costa Rica,Reference site http://www.HadoopExam.com
+2|AMERICA|Average Business Region for HadoopExam.com|24,Panama,Reference site http://www.HadoopExam.com
+3|ASIA|Best Business Region for Training4Exam.com|8,India,Reference site http://www.QuickTechie.com
+3|ASIA|Best Business Region for HadoopExam.com|9,China,Reference site http://www.HadoopExam.com
+3|ASIA|Best Business Region for Training4Exam.com|12,Japan,Reference site http://www.QuickTechie.com
+3|ASIA|Best Business Region for HadoopExam.com|18,Russia,Reference site http://www.HadoopExam.com
+3|ASIA|Best Business Region for Training4Exam.com|21,Israel,Reference site http://www.QuickTechie.com
+4|EUROPE|Low sale Business Region for HadoopExam.com|6,Austria,Reference site http://www.HadoopExam.com
+4|EUROPE|Low sale Business Region for Training4Exam.com|7,Bulgaria,Reference site http://www.QuickTechie.com
+4|EUROPE|Low sale Business Region for HadoopExam.com|19,Belgium,Reference site http://www.HadoopExam.com
+4|EUROPE|Low sale Business Region for Training4Exam.com|22,Croatia,Reference site http://www.QuickTechie.com
+4|EUROPE|Low sale Business Region for HadoopExam.com|23,Denmark,Reference site http://www.HadoopExam.com
+5|MIDDLE EAST|Ok Ok sale Business Region for HadoopExam.com|4,Saudi Arabia,Reference site http://www.QuickTechie.com
+5|MIDDLE EAST|Ok Ok sale Business Region for Training4Exam.com|10,Yemen,Reference site http://www.HadoopExam.com
+5|MIDDLE EAST|Ok Ok sale Business Region for HadoopExam.com|11,Oman,Reference site http://www.QuickTechie.com
+5|MIDDLE EAST|Ok Ok sale Business Region for Training4Exam.com|13,Kuwait,Reference site http://www.HadoopExam.com
+5|MIDDLE EAST|Ok Ok sale Business Region for HadoopExam.com|20,Qatar,Reference site http://www.QuickTechie.com#
 
 
+
+scala> val textFile = sc.textFile("hdfs:///user/cloudera/hadoop/exam/region.csv");
+
+textFile: org.apache.spark.rdd.RDD[String] = hdfs:///user/cloudera/hadoop/exam/region.csv MapPartitionsRDD[1] at textFile at <console>:27
+
+scala> textFile.take(5).foreach(println)
+1|AFRICA|Good Business Region for HadoopExam.com|0,Cameroon,Reference site http://www.QuickTechie.com
+1|AFRICA|Good Business Region for Training4Exam.com|5,Egypt,Reference site http://www.HadoopExam.com
+1|AFRICA|Good Business Region for HadoopExam.com|14,Namibia,Reference site http://www.QuickTechie.com
+1|AFRICA|Good Business Region for Training4Exam.com|15,Zimbabwe,Reference site http://www.HadoopExam.com
+1|AFRICA|Good Business Region for HadoopExam.com|16,Uganda,Reference site http://www.QuickTechie.com
+scala> import sqlContext.implicits._
+scala> val df = textFile.toDF("line")
+scala> df.write.parquet("hdfs:///user/cloudera/hadoop/exam/parquetRegion");
+
+
+hive> load data inpath '/user/cloudera/hadoop/exam/parquetRegion' into table region;
+
+hive> create table tempresgion(data string);
+hive> load data inpath '/user/cloudera/hadoop/exam/region.csv' into table tempresgion;
+hive> select split(data,'\\|')[0] r_regionkey,
+    > split(data,'\\|')[1] r_name,
+    > split(data,'\\|')[2] r_commet,
+    > split(split(data,'\\|')[3],",")[0] n_nationKey,
+    > split(split(data,'\\|')[3],",")[1] n_name,
+    > split(split(data,'\\|')[3],",")[2] n_comment 
+    > from 
+    > tempresgion limit 5;
+OK
+1	AFRICA	Good Business Region for HadoopExam.com	0	Cameroon	Reference site http://www.QuickTechie.com
+1	AFRICA	Good Business Region for Training4Exam.com	5	Egypt	Reference site http://www.HadoopExam.com
+1	AFRICA	Good Business Region for HadoopExam.com	14	Namibia	Reference site http://www.QuickTechie.com
+1	AFRICA	Good Business Region for Training4Exam.com	15	Zimbabwe	Reference site http://www.HadoopExam.com
+1	AFRICA	Good Business Region for HadoopExam.com	16	Uganda	Reference site http://www.QuickTechie.com
+Time taken: 0.127 seconds, Fetched: 5 row(s)
 
 
 
