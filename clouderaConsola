@@ -637,6 +637,19 @@ OK
 Time taken: 0.115 seconds, Fetched: 10 row(s)
  
 
+#Crear un tabla que contenga valores numerícos que la columna se llame value y otra columna que se llame property 
+y tenga el valor es par(even) ó impar(odd).  
+
+En 192.168.2.137 => sudo apt-get intall openssh-server; nmap localhost => abrir puerto 22
+En 172.17.0.2 => sudo apt-get intall openssh-server; service sshd status; service sshd start.
+
+scp -v cristina.cano@192.168.2.137:/home/cristina.cano/hadoopexamintFile.csv root@172.17.0.2:/home/cloudera
+
+hdfs dfs -mkdir /user/cloudera/hadoopexam
+
+hdfs dfs -put /home/cloudera/hadoopexamintFile.csv /user/cloudera/hadoopexam
+hive> create external table hadoopexamint1 (value int, property string) row format delimited fields terminated by ',' stored as textfile  ;
+hive> load data inpath '/user/cloudera/hadoopexam/hadoopexamintFile.csv' into table hadoopexamint;
 
 
 
