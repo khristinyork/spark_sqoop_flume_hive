@@ -1,6 +1,6 @@
 #CLOUDERA EJERCICIOS.
 
-/ Contribution from Raphael L. Nascimento: 
+
 sqlContext.sql("SET spark.sql.parquet.compression.codec=snappy")
 
 #ARRANCAR DOCKER DE CLOUDERA
