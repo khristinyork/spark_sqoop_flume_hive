@@ -1,0 +1,8 @@
+
+aceptados
+Si desea ver el contenido de un RDD, una forma es usar collect():
+
+myRDD.collect().foreach(println)
+Sin embargo, esa no es una buena idea cuando el RDD tiene miles de millones de líneas. Use take()para tomar solo unos pocos para imprimir:
+
+myRDD.take(n).foreach(println)
