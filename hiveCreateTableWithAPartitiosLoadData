@@ -1,0 +1,109 @@
+1.	Create a database for this exercise
+
+CREATE DATABASE HIVE_PARTITION;
+
+USE HIVE_PARTITION;
+
+2.	Create a temporary table
+
+CREATE TABLE temp_India (
+
+OFFICE_NAME STRING,
+
+OFFICE_STATUS     STRING,
+
+PINCODE           INT,
+
+TELEPHONE   BIGINT,
+
+TALUK       STRING,
+
+DISTRICT    STRING,
+
+STATE       STRING,
+
+POSTAL_DIVISION   STRING,
+
+POSTAL_REGION     STRING,
+
+POSTAL_CIRCLE     STRING
+
+)
+
+ROW FORMAT DELIMITED
+
+FIELDS TERMINATED BY ','
+
+STORED AS TEXTFILE;
+
+3.	Load data into temporary table
+
+LOAD DATA LOCAL INPATH '/home/cloudera/All_States_PinCode.csv' INTO
+
+TABLE temp_India;
+
+4.	Create partitioned table
+
+CREATE TABLE India (
+
+OFFICE_NAME STRING,
+
+OFFICE_STATUS     STRING,
+
+PINCODE           INT,
+
+TELEPHONE   BIGINT,
+
+TALUK       STRING,
+
+DISTRICT    STRING,
+
+POSTAL_DIVISION   STRING,
+
+POSTAL_REGION     STRING,
+
+POSTAL_CIRCLE     STRING
+
+)
+
+PARTITIONED BY (STATE   STRING)
+
+ROW FORMAT DELIMITED
+
+FIELDS TERMINATED BY ','
+
+STORED AS TEXTFILE;
+
+5.	Instruct hive to dynamically load partitions
+
+SET hive.exec.dynamic.partition = true;
+
+SET hive.exec.dynamic.partition.mode = nonstrict;
+
+6.	Import data into partitioned table from temporary table
+
+INSERT OVERWRITE TABLE India PARTITION (STATE)
+
+SELECT
+
+OFFICE_NAME       ,
+
+OFFICE_STATUS     ,
+
+PINCODE           ,
+
+TELEPHONE         ,
+
+TALUK             ,
+
+DISTRICT          ,
+
+STATE             ,
+
+POSTAL_DIVISION   ,
+
+POSTAL_REGION     ,
+
+POSTAL_CIRCLE
+
+FROM temp_India;
