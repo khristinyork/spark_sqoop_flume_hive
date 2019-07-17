@@ -1,0 +1,2 @@
+hdfs dfs -get /tmp/flume/tweets/2019/07/14/11/31/FlumeData.1563129060362 /home/cloudera
+avro-tools getschema FlumeData.1563129060362 > schemaAvro.avsc
