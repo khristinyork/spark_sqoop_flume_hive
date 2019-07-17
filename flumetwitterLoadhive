@@ -1,2 +1,13 @@
 hdfs dfs -get /tmp/flume/tweets/2019/07/14/11/31/FlumeData.1563129060362 /home/cloudera
 avro-tools getschema FlumeData.1563129060362 > schemaAvro.avsc
+hdfs dfs put /home/cloudera/schemaAvro.avsc /tmp/flume
+
+HUE > hive
+
+CREATE EXTERNAL TABLE demo1
+--  PARTITIONED BY (date STRING)
+  PARTITIONED BY (year string,month string,day string,hour string)
+  ROW FORMAT SERDE "org.apache.hadoop.hive.serde2.avro.AvroSerDe"
+  STORED AS AVRO
+  LOCATION "hdfs:///tmp/flume/tweets"
+  TBLPROPERTIES ('avro.schema.url' = 'hdfs:///tmp/flume/schemaAvro.avsc');
