@@ -11,3 +11,7 @@ CREATE EXTERNAL TABLE demo1
   STORED AS AVRO
   LOCATION "hdfs:///tmp/flume/tweets"
   TBLPROPERTIES ('avro.schema.url' = 'hdfs:///tmp/flume/schemaAvro.avsc');
+
+
+etc/inittab
+y en la linea que dice id:initdefault, en vez de poner default pones 3 que seria el modo texto y el modo grafico seria 5.
