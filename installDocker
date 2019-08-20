@@ -3,11 +3,15 @@ https://www.techrepublic.com/article/how-to-commit-changes-to-a-docker-image
 
 Docker Hub  
 
-docker login
+##docker login
 User: kafkalear
 password: Docker@2019
-docker pull christianmata/definitiva
-docker images
+##docker pull christianmata/definitiva
+##docker images
+Salida:
+REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE
+christianmata/definitiva   latest              64436bbae0e9        4 weeks ago         7.7GB
+
 
 docker run christianmata/definitiva:latest
 
