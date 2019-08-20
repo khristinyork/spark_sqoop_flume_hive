@@ -1,0 +1,307 @@
+https://stackoverflow.com/questions/48469728/unable-to-install-spark-2-2-in-cloudera-quickstart-vm-5-10
+
+
+SPARK 2.2 Installation Setup on Cloudera VM
+
+Step 1: Download a quickstart_vm from the link:
+Prefer a vmware platform as it is easy to use, anyways all the options are viable.
+Size is around 5.4gb of the entire tar file. We need to provide the business email id as it won’t accept personal email ids. 
+
+
+Step 2: The virtual environment requires around 8gb of RAM, please allocate sufficient memory to avoid performance glitches.
+
+
+Step 3: Please open the terminal and switch to root user as:
+         su root
+         password: cloudera
+
+Step 4: Cloudera provides java –version 1.7.0_67 which is old and does not match with our needs. To avoid java related exceptions, please install java with the following commands:
+(a). Downloading Java:
+wget -c --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.tar.gz
+
+(b). Switch to /usr/java/ directory with “cd /usr/java/” command.
+
+(c). cp the java download tar file to the /usr/java/ directory.
+
+(d). Untar the directory with “tar –zxvf jdk-8u31-linux-x64.tar.gz”
+
+(e). Open the profile file with the command “vi ~/.bash_profile” 
+
+(f). export JAVA_HOME to the new java directory.
+       “export JAVA_HOME=/usr/java/jdk1.8.0_131”
+
+       Save and Exit.
+
+
+(g). In order to reflect the above change, following command needs to be executed on the shell:
+       source ~/.bash_profile
+
+Step 5:  The Cloudera VM provides spark 1.6 version by default. However, 1.6 API’s are old and do not match with production environments. In that case, we need to download and manually install Spark 2.2.
+
+(a). Switch to /opt/  directory with the command:
+“cd /opt/”
+
+(b). Download spark with the command:
+wget https://d3kbcqa49mib13.cloudfront.net/spark-2.2.0-bin-hadoop2.7.tgz
+
+(c). Untar the spark tar with the following command:
+tar -zxvf spark-2.2.0-bin-hadoop2.7.tgz
+
+(d). We need to define some environment variables as default settings:
+Please open a file with the following command:
+vi /opt/spark-2.2.0-bin-hadoop2.7/conf/spark-env.sh
+
+
+
+****************************************************************************************************************************************
+Ask Question
+Asked 1 year, 6 months ago
+Active 16 days ago
+Viewed 881 times
+
+3
+
+
+1
+I have followed the blog (Below mentioned) here and downloaded the parcel and put as per required. Please let me know if any one has installed and the steps.
+
+(https://www.cloudera.com/documentation/spark2/latest/topics/spark2_installing.html)
+/opt/cloudera/csd/SPARK2-2.1.0.cloudera2-1.cdh5.7.0.p0.171658-el5.parcel
+
+But service cloudera-scm-server restart is not executing. To use Cloudera Express (free), run:
+
+sudo /home/cloudera/cloudera-manager --express
+This requires at least 8 GB of RAM and at least 2 virtual CPUs.
+
+cloudera apache-spark-2.0 cloudera-quickstart-vm
+shareimprove this question
+asked Jan 26 '18 at 21:22
+
+user3858193
+53633 gold badges1111 silver badges3232 bronze badges
+I had many issues when using the Cloudera Express. I think you have to wait until they get the 2.2 added to the VM. I just now could not get it to work. Best on an own clean machine, but many issues then to consider. – thebluephantom Jun 16 '18 at 11:50
+I added it and then got issues with the hive metastore. I suspect that it has to do with 1.6 being there. Hopeless – thebluephantom Jul 29 '18 at 20:52
+I have installed mapR Sandbox that has SPARK 2.2 but not IMPALA. Intefrace is nicer and it seems to work with little effort. That's my advice. – thebluephantom Aug 11 '18 at 9:11
+add a comment
+5 Answers
+active oldest votes
+
+2
+
+SPARK 2.2 Installation Setup on Cloudera VM
+
+Step 1: Download a quickstart_vm from the link:
+Prefer a vmware platform as it is easy to use, anyways all the options are viable.
+Size is around 5.4gb of the entire tar file. We need to provide the business email id as it won’t accept personal email ids. 
+
+
+Step 2: The virtual environment requires around 8gb of RAM, please allocate sufficient memory to avoid performance glitches.
+
+
+Step 3: Please open the terminal and switch to root user as:
+         su root
+         password: cloudera
+
+Step 4: Cloudera provides java –version 1.7.0_67 which is old and does not match with our needs. To avoid java related exceptions, please install java with the following commands:
+(a). Downloading Java:
+wget -c --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.tar.gz
+
+(b). Switch to /usr/java/ directory with “cd /usr/java/” command.
+
+(c). cp the java download tar file to the /usr/java/ directory.
+
+(d). Untar the directory with “tar –zxvf jdk-8u31-linux-x64.tar.gz”
+
+(e). Open the profile file with the command “vi ~/.bash_profile” 
+
+(f). export JAVA_HOME to the new java directory.
+       “export JAVA_HOME=/usr/java/jdk1.8.0_131”
+
+       Save and Exit.
+
+
+(g). In order to reflect the above change, following command needs to be executed on the shell:
+       source ~/.bash_profile
+
+Step 5:  The Cloudera VM provides spark 1.6 version by default. However, 1.6 API’s are old and do not match with production environments. In that case, we need to download and manually install Spark 2.2.
+
+(a). Switch to /opt/  directory with the command:
+“cd /opt/”
+
+(b). Download spark with the command:
+wget https://d3kbcqa49mib13.cloudfront.net/spark-2.2.0-bin-hadoop2.7.tgz
+
+(c). Untar the spark tar with the following command:
+tar -zxvf spark-2.2.0-bin-hadoop2.7.tgz
+
+(d). We need to define some environment variables as default settings:
+Please open a file with the following command:
+vi /opt/spark-2.2.0-bin-hadoop2.7/conf/spark-env.sh
+Paste the following configurations in the file:
+SPARK_MASTER_IP=192.168.50.1
+SPARK_EXECUTOR_MEMORY=512m
+SPARK_DRIVER_MEMORY=512m
+SPARK_WORKER_MEMORY=512m
+SPARK_DAEMON_MEMORY=512m
+Save and exit
+
+(e).    We need to start spark with the following command:
+/opt/spark-2.2.0-bin-hadoop2.7/sbin/start-all.sh
+Export spark_home : 
+export SPARK_HOME=/opt/spark-2.2.0-bin-hadoop2.7/
+
+(f). Change the permissions of the directory:
+chmod 777 -R /tmp/hive
+
+(g). Try “spark-shell”, it should work.
+shareimprove this answer
+answered Nov 2 '18 at 7:21
+
+swapnil shashank
+14677 bronze badges
+add a comment
+
+1
+
+Try this command
+
+sudo /home/cloudera/cloudera-manager --express --force
+shareimprove this answer
+edited Oct 20 '18 at 15:16
+
+Hossein Golshani
+1,71455 gold badges1111 silver badges2424 bronze badges
+answered Oct 20 '18 at 14:59
+
+Priyanka Gupta
+1111 bronze badge
+could be nice to explain – OznOg Oct 20 '18 at 16:34
+It gives a warning to run Cloudera Express in a VM with at least 8 gb of RAM, by adding --force, we are telling it to run Cloudera Express even with the current RAM. – Priyanka Gupta Oct 21 '18 at 8:16
+add a comment
+
+1
+
+Please follow below video it has all the necessary step required in order to install Sprak2 in Clouedra VM.
+
+youtubue link - https://www.youtube.com/watch?v=lQxlO3coMxM
+
+Also for for starting Cloudera Express (free) your VM should have at-least 8Gb RAM allocated or if you have default 4GB RAM allocated then you can forcefullly start ysing below command and then follow the above video.
+
+sudo /home/cloudera/cloudera-manager --force --express
+shareimprove this answer
+answered Mar 18 at 6:46
+
+Maneesh Bishnoi
+2144 bronze badges
+add a comment
+
+0
+
+I gave up on this, nothing works well with parcel and non-parcel installation.
+
+As soon as cloudera express is started numerous errors and Java 7 instead of Java 8.
+
+I got a mapr VM install with Spark 2.x. No issues. Works first time.
+
+That works well. This is my advice # 1.
+
+If you want KUDU, then I would install centos and install things oneself. This is advice # 2. OK, you may miss Impala, but if for pure research and development then not so much of an issue.
+
+shareimprove this answer
+edited Nov 2 '18 at 15:03
+answered Nov 2 '18 at 13:12
+
+thebluephantom
+4,55555 gold badges1414 silver badges3737 bronze badges
+add a comment
+
+0
+
+  SnPARK 2.2 Installation Setup on Cloudera VM
+
+    Step 1: Download a quickstart_vm from the link:
+    Prefer a vmware platform as it is easy to use, anyways all the options are viable.
+    Size is around 5.4gb of the entire tar file. We need to provide the business email id as it won’t accept personal email ids. 
+
+
+    Step 2: The virtual environment requires around 8gb of RAM, please allocate sufficient memory to avoid performance glitches.
+
+
+    Step 3: Please open the terminal and switch to root user as:
+             su root
+             password: cloudera
+
+    Step 4: Cloudera provides java –version 1.7.0_67 which is old and does not match with our needs. To avoid java related exceptions, please install java with the following commands:
+    (a). Downloading Java:
+    wget -c --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.tar.gz
+
+    (b). Switch to /usr/java/ directory with “cd /usr/java/” command.
+
+    (c). cp the java download tar file to the /usr/java/ directory.
+
+    (d). Untar the directory with “tar –xvzf jdk-8u31-linux-x64.tar.gz”
+
+    (e). Open the profile file with the command “vi ~/.bash_profile” 
+
+    (f). export JAVA_HOME to the new java directory.
+           “export JAVA_HOME=/usr/java/jdk1.8.0_131”
+
+           Save and Exit.
+
+
+    (g). In order to reflect the above change, following command needs to be executed on the shell:
+           source ~/.bash_profile
+
+    Step 5:  The Cloudera VM provides spark 1.6 version by default. However, 1.6 API’s are old and do not match with production environments. In that case, we need to download and manually install Spark 2.2.
+
+    (a). Switch to /opt/  directory with the command:
+    “cd /opt/”
+
+    (b). Download spark with the command:
+    wget https://d3kbcqa49mib13.cloudfront.net/spark-2.2.0-bin-hadoop2.7.tgz
+
+    (c). Untar the spark tar with the following command:
+    tar -xvzf spark-2.2.0-bin-hadoop2.7.tgz
+
+    (d). We need to define some environment variables as default settings:
+    Please open a file with the following command:
+    vi /opt/spark-2.2.0-bin-hadoop2.7/conf/spark-env.sh
+    Paste the following configurations in the file:
+    SPARK_MASTER_IP=192.168.50.1
+    SPARK_EXECUTOR_MEMORY=512m
+    SPARK_DRIVER_MEMORY=512m
+    SPARK_WORKER_MEMORY=512m
+    SPARK_DAEMON_MEMORY=512m
+    SPARK_LOCAL_IP=127.0.0.1
+    Save and exit
+
+    (e).    We need to start spark with the following command:
+    /opt/spark-2.2.0-bin-hadoop2.7/sbin/start-all.sh
+    Export spark_home : 
+    export SPARK_HOME=/opt/spark-2.2.0-bin-hadoop2.7/
+
+    (f). Change the permissions of the directory:
+    chmod 777 -R /tmp/hive
+
+    (g). Try “spark-shell”, it should work.
+Same answeras swapnil shashank with small modification below
+
+SPARK_LOCAL_IP=127.0.0.1
+tar -xvzf spark-2.2.0-bin-hadoop2.7.tgz
+Paste the following configurations in the file:
+SPARK_MASTER_IP=192.168.50.1
+SPARK_EXECUTOR_MEMORY=512m
+SPARK_DRIVER_MEMORY=512m
+SPARK_WORKER_MEMORY=512m
+SPARK_DAEMON_MEMORY=512m
+Save and exit
+
+(e).    We need to start spark with the following command:
+/opt/spark-2.2.0-bin-hadoop2.7/sbin/start-all.sh
+Export spark_home : 
+export SPARK_HOME=/opt/spark-2.2.0-bin-hadoop2.7/
+
+(f). Change the permissions of the directory:
+chmod 777 -R /tmp/hive
+
+(g). Try “spark-shell”, it should work.
