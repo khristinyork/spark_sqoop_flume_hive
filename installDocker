@@ -1,7 +1,13 @@
-#ARRANCAR DOCKER DE CLOUDERA
-docker run --hostname=quickstart.cloudera --privileged=true -t -i -v /home/docker-clodera:/src --publish-all=true -p 8088:8088  -p 8888:8888 -p 50090:50090 -p 50070:50070 -p 50075:50075 -p 8042:8042 -p 60030:60030 -p 25000:25000 -p 25010:25010 -p 18088:18088 -p 8983:8983 -p 11000:11000 cloudera/quickstart /usr/bin/docker-quickstart
-docker ps => te muestra el containerid =f832867cde6c
-docker exec -it f832867cde6c /bin/bash
+PARAR UN DOCKER
+##docker ps -aq
+Salida: 1cbfadd41782
+##docker stop 1cbfadd41782
+
+ARRANCAR DOCKER DE CLOUDERA
+##docker run --hostname=quickstart.cloudera --privileged=true -t -i -v /home/docker-clodera:/src --publish-all=true -p 8088:8088 -p 8888:8888 -p 50090:50090 -p 50070:50070 -p 50075:50075 -p 8042:8042 -p 60030:60030 -p 25000:25000 -p 25010:25010 -p 18088:18088 -p 8983:8983 -p 11000:11000 christianmata/definitiva  /usr/bin/docker-quickstart
+
+##docker ps => te muestra el containerid =f832867cde6c
+##docker exec -it f832867cde6c /bin/bash
 
 
 
