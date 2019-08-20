@@ -2,71 +2,44 @@
 
     Requisitos previos
 
-    Paso 1 — Instalar Docker
+    #Paso 1 — Instalar Docker
 
-    Paso 2 — Ejecutar el comando Docker sin sudo (Opcional)
+    #Paso 2 — Ejecutar el comando Docker sin sudo (Opcional)
 
-    Paso 3 — Usar el comando Docker
+    #Paso 3 — Usar el comando Docker
 
-    Paso 4 — Trabajo con imágenes de Docker
+    #Paso 4 — Trabajo con imágenes de Docker
 
-    Paso 5 — Ejecutar un contenedor Docker
+    #Paso 5 — Ejecutar un contenedor Docker
 
-    Paso 6 — Gestionar los contenedores de Docker
+    #Paso 6 — Gestionar los contenedores de Docker
 
-    Paso 7 — Hacer cambios en un contenedor a una imagen de Docker
+    #Paso 7 — Hacer cambios en un contenedor a una imagen de Docker
 
-    Paso 8 — Hacer push de imágenes de Docker a un repositorio Docker
+    #Paso 8 — Hacer push de imágenes de Docker a un repositorio Docker
 
-    Conclusión
+   
+#Introducción
 
-    DigitalOcean Kubernetes is now Generally Available. Learn more ❯
-    Products
-    Pricing
-    Docs
-    Log in
-
-    Tutorials
-    Questions
-    Get Involved
-
-    Sign Up
-
-Language: ES
-Related
-How to Use a Remote Docker Server to Speed Up Your Workflow Tutorial Tutorial
-How To Install Docker Compose on Ubuntu 18.04 Tutorial Tutorial
-Cómo instalar y usar Docker en Ubuntu 18.04
-PostedApril 26, 2019 26.2k views Docker Ubuntu 18.04
-
-    bhogan
-
-    By Brian Hogan
-
-    Become an author
-
-Finid escribió una versión anterior de este tutorial.
-Introducción
-
-Docker es una aplicación que simplifica el proceso de gestionar los procesos de aplicaciones en contenedores. Los contenedores le permiten ejecutar sus aplicaciones en procesos aislados de recursos. Se parecen a las máquinas virtuales, sin embargo, los contenedores son más portátiles, tienen más recursos y son más dependientes del sistema operativo host.
+##Docker es una aplicación que simplifica el proceso de gestionar los procesos de aplicaciones en contenedores. Los contenedores le permiten ejecutar sus aplicaciones en procesos aislados de recursos. Se parecen a las máquinas virtuales, sin embargo, los contenedores son más portátiles, tienen más recursos y son más dependientes del sistema operativo host.
 
 Lea El ecosistema Docker: Una introducción a los componentes comunes, si desea tener una introducción más detallada sobre los distintos componentes de un contenedor Docker.
 
 Este tutorial le enseñará a instalar y usar la edición de comunidad de Docker (Community Edition - CE) en Ubuntu 18.04. Va a instalar Docker, trabajar con contenedores e imágenes y hacer el push de una imagen a un Repositorio de Docker.
 Requisitos previos
 
-Necesitará lo siguiente para seguir este tutorial:
+##Necesitará lo siguiente para seguir este tutorial:
 
     Un servidor Ubuntu 18.04 configurado siguiendo la guía de configuración inicial del servidor Ubuntu 18.04, incluyendo un usuario sudo no root y un firewall.
     Una cuenta en Docker Hub, si desea crear sus propias imágenes y hacer el push a Docker Hub, según se indica en los pasos 7 y 8.
 
-Paso 1 — Instalar Docker
+###Paso 1 — Instalar Docker
 
 Es posible que el paquete de instalación de Docker que está disponible en el repositorio oficial de Ubuntu no sea la última versión. Vamos a instalar Docker desde el repositorio oficial de Docker para asegurarnos de tener la última versión. Para hacer esto, vamos a agregar una nueva fuente de paquete, la clave GPG de Docker para asegurar que las descargas sean válidas y después vamos a instalar el paquete.
 
 Primero, actualice su lista de paquetes existente:
 
-    sudo apt update
+   #### sudo apt update
 
 A continuación, instale algunos paquetes de requisitos previos que le permiten a apt usar paquetes mediante HTTPS:
 
