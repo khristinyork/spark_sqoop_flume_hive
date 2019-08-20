@@ -1,3 +1,6 @@
+CONFIGURACION DE DOCKER
+docker inspect christianmata/definitiva
+
 PARAR UN DOCKER
 ##docker ps -aq
 Salida: 1cbfadd41782
