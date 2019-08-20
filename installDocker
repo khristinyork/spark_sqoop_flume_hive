@@ -1,9 +1,14 @@
+
+
 Docker Hub  
 
 docker login
 User: kafkalear
 password: Docker@2019
 docker pull christianmata/definitiva
+docker run christianmata/definitiva:latest
+
+URl: https://www.digitalocean.com/community/tutorials/como-instalar-y-usar-docker-en-ubuntu-18-04-1-es
 
     Requisitos previos
 
