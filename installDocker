@@ -1,5 +1,8 @@
 Docker Hub  
+
+docker login
 User: kafkalear
+password: Docker@2019
 docker pull christianmata/definitiva
 
     Requisitos previos
