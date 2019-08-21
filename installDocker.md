@@ -1,3 +1,18 @@
+COPIAR DE LOCAL A DOCKER
+
+Pasos:- arrancar con docker run:
+-d => SE REALIZA EN SEGUNDO PLANO
+-name => le da nombre al docker par poder realizar el pegado
+-it => para que tenga entorno bash
+--privileged=> para tenre todos los permisos dentro
+--publish-all=> todos los directorios publicos
+
+docker run -d --name cris --hostname=quickstart.cloudera --privileged=true -it  -v /home/docker-clodera:/src --publish-all=true -p 8088:8088 -p 8888:8888 -p 50090:50090 -p 50070:50070 -p 50075:50075 -p 8042:8042 -p 60030:60030 -p 25000:25000 -p 25010:25010 -p 18088:18088 -p 8983:8983 -p 11000:11000  christianmata/definitiva /usr/bin/docker-quickstart 
+COPIANDO DE LOCAL A DOCKER:(Ejecutar desde mmaquina local)
+sudo docker cp examples.desktop cris:/tmp
+COPIANDO DE DOCKER A LOCAL:(Ejecutar desde maquina local)
+sudo docker cp cris:/tmp/fichero .
+
 CONFIGURACION DE DOCKER
 docker inspect christianmata/definitiva
 
