@@ -1,3 +1,20 @@
+GUARDAR LOS CAMBIOS DE UN DOCKER
+
+ID DOCKER SOBRE LE QUE HEMOS REALIZADO LOS CAMBIOS 11eaf37bff30
+
+##sudo docker commit 11eaf37bff30 cloudera.spark.2.2
+
+##sudo docker images
+
+salida:
+
+REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE
+cloudera.spark.2.2         latest              1ebfb10b4815        2 minutes ago       8.05GB
+christianmata/definitiva   latest              64436bbae0e9        5 weeks ago         7.7GB
+
+
+
+
 COPIAR DE LOCAL A DOCKER
 
 Pasos:- arrancar con docker run:
