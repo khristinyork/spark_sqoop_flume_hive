@@ -1,3 +1,6 @@
+
+
+
 GUARDAR LOS CAMBIOS DE UN DOCKER
 
 ID DOCKER SOBRE LE QUE HEMOS REALIZADO LOS CAMBIOS 11eaf37bff30
@@ -11,6 +14,10 @@ salida:
 REPOSITORY                 TAG                 IMAGE ID            CREATED             SIZE
 cloudera.spark.2.2         latest              1ebfb10b4815        2 minutes ago       8.05GB
 christianmata/definitiva   latest              64436bbae0e9        5 weeks ago         7.7GB
+
+
+##sudo docker run -d  --ip 172.17.0.2 --hostname=quickstart.cloudera --privileged=true -it  -v /home/docker-clodera:/src --publish-all=true -p 8088:8088 -p 8888:8888 -p 50090:50090 -p 50070:50070 -p 50075:50075 -p 8042:8042 -p 60030:60030 -p 25000:25000 -p 25010:25010 -p 18088:18088 -p 8983:8983 -p 11000:11000 -p 7077:7077 -p 8080:8080  cloudera.spark.2.2
+
 
 
 
