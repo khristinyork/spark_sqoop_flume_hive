@@ -1,0 +1,13 @@
+1cd/opt/spark/opt/spark-2.2.0-bin-hadoop2.7/sbin
+./start-master.sh
+cat  /opt/spark-2.2.0-bin-hadoop2.7/logs/spark-cloudera-org.apache.spark.deploy.master.Master-1-quickstart.cloudera.out |more
+
+
+resultado:
+***********
+Spark Command: /usr/java/jdk1.8.0_221/bin/java -cp /opt/spark-2.2.0-bin-hadoop2.7/conf/:/opt/spark-2.2.0-bin-hadoop2.7/jars/* -Xmx512m org.apac
+he.spark.deploy.master.Master --host quickstart.cloudera --port 7077 --webui-port 8080
+
+./start-slave.sh quickstart.cloudera:7077
+
+
