@@ -1,0 +1,115 @@
+#Metro Mantenimiento
+La estrutura del proyecto es la siguiente:
+ - spark: contiene los ficheros de configuración y binarios de Spark.
+ - lib: contiene los binarios .jar.
+ - flume: contiene los ficheros de configuración de flume.
+ - resources: contiene los ficheros de configuraciones transversales a toda la aplicación creación de tablas Hive y configuración.
+
+###Aplicación
+##### Arrancar la app:
+	./spark/bin/mantenimiento_Manager.sh start -c ../conf/mantenimientoConfig.properties -p ps10000@UNIX.ASI -k /home2/DNE/.ps10000.keytab
+ 
+ 
+###YARN
+##### Traernos de yarn un log:
+
+	kinit -kt /home2/DNE/.ps10000.keytab ps10000@UNIX.ASI;yarn logs  -applicationId  application_1560160833278_0721 -appOwner ps10000;
+	
+##### Matar una aplicación del resource manager(yarn):
+	yarn application -kill application_1568355449260_0321
+	
+###KAFKA
+
+#####Como ver el contenido de un topic:
+
+	export KAFKA_OPTS="-Djava.security.auth.login.config=/home2/pe3644/jaas.conf";kafka-console-consumer --topic s2000_VEL  --group s2000_VEL_cmg_us  --bootstrap-server denton20:9093,denton21:9093,denton22:9093 --consumer.config /home2/pe3644/consumer.properties
+
+##### Kafka client:
+ - jaas.conf: Este fichero tiene la configuración de kerberos para el usuario de kafka.
+
+	KafkaClient {
+	com.sun.security.auth.module.Krb5LoginModule required
+	useKeyTab=true
+	keyTab="/home2/ps10000/.ps10000.keytab"
+	storeKey=true
+	useTicketCache=false
+	serviceName="kafka"
+	principal="ps10000@UNIX.ASI";
+	};
+
+
+>Debemos de ejecutar el fichero jaas antes de lanzar cualquier comando de kafka tools.
+'export KAFKA_OPTS="-Djava.security.auth.login.config=/pathConfig/jaas.conf";'
+
+#####Kafka tools:
+###### Crear topic
+	kafka-topics --create --zookeeper <host:2181> --topic <nombre_topic>  --partitions <numero_particiones> --replication-factor <numero_replicas>
+	
+	<host:2181> denton10:2181,denton11:2181,denton20:2181,denton21:2181,denton22:2181
+###### Consumir un topic.(Leer mensajes del topic)
+
+	kafka-console-consumer --topic <nombre_topic> --group <nombre_consumergroup> --bootstrap-server <host:9092> --consumer.config <ruta_consumer.properties> --from-beginning
+
+
+###### Producir mensajes en un topic.(Escribir en el topic)
+
+	kafka-console-producer.sh --broker-list <host:9092> --topic <nombre_topic>
+This is a message
+
+###### Descripción del topic
+	kafka-topics.sh --describe --bootstrap-server <host:9092> --topic <nombre_topic>
+   
+   
+
+######Sistema  Aire Acondicionado 
+	Topic: s2000_AA     ConsumerGroup: s2000_AA_cmg_us     
+######Sistema  Terminal Cabina	 
+	Topic: s2000_CAB    ConsumerGroup: s2000_CAB_cmg_us    
+######Sistema  Velocimetro		
+	Topic: s2000_VEL    ConsumerGroup: s2000_VEL_cmg_us    
+######Sistema  Cesis			     
+	Topic: s2000_CESIS  ConsumerGroup: s2000_CESIS_cmg_us  
+######Sistema  UMI				 
+	Topic: s2000_UMI    ConsumerGroup: s2000_UMI_cmg_us    
+######Sistema  SistAll			 
+	Topic: s2000systall ConsumerGroup: s2000systall_cmg    
+
+
+
+
+
+
+
+##Funcionalidades por versión
+###versión 1.1.7
+ - Parseo de datos: Terminal de cabina (control 1, control 3).[SicCAB]
+ - Parseo de datos: Velocímetro.[VEL]
+ 
+###versión 1.1.8
+ - Creación, parseo de todos los sistemas en  un nuevo topic Systall.
+ - Añadir campos longitud en todos los sistemas.
+ - El coche 1111 debe entrar en todos los topic. 
+
+###versión 1.1.9
+
+ - Cambiar ctr3 del terminal de cabina SicCAB añadiendo longitudes de ruedas
+ - Añadimos en el topic y tabla de sistall por le campo hora de insercion para a futuro realizar particionamiento por hora.
+
+###versión 1.1.10
+ - Correctivo: Cambio en la traducción de la posición del vagón 0000 0001 coche1
+ - Correctivo: Cambio en el sistema de Aire Acondicionado para cuando viene por el simulador viene con los campos a '---'.
+
+
+	EJ de Error solucionado: "4117712"|"2019-07-16 09:57:43.0"|"1111"|"2019-07-16 09:57:34.0"|"-1"|"---"|"---"|"---"|"---"|"---"|"---"|"---"|"---"|"---"|"---"|"---"|"---"|"---"|"---"|"---"|"---"    -    java.lang.IllegalArgumentException: hexBinary needs to be even-length: ---
+
+
+###versión 1.1.11
+ - Añadimos el campo mac bssid al final del topic s2000B:
+ 
+	export KAFKA_OPTS="-Djava.security.auth.login.config=/home2/pe3644/jaas.conf";kafka-console-consumer --topic yapazIotS2000b  --group yapazIotS2000b_cmg_us  --bootstrap-server denton20:9093,denton21:9093,denton22:9093 --consumer.config /home2/pe3644/consumer.properties
+
+	Example:
+	"4410625"|"2019-07-23 11:39:44.0"|"2799"|"2019-07-23 11:39:43.0"|"0"|"26262B32392E38392F2B31322E32322F2B31322E37382F2B32342E37342F2B32342E35352F2B32352E33392F573F"|"2626000406002F2B32332E30302F2B32352E30302F2B32342E36352F2B32392E38392F2B31322E35302F2B31312E33332F3695"|"26267ED262890C901000000000FF0000FF5668"|"2626452D33313333352F48303035313437322F4D6574726F204D61647269642F31312E312FCE44"|""|""|""|""|""|""|""|""|"02010A0101400000708D"|"01021A0100133DC0E8C15EC000C112C177C336C000C34000A37A"|""|""|"3c71bfce76b0"|"d8b190236f99"
+	
+###versión 1.1.12
+ - Correctivo: Cuando un coche su mac no esta registrado en la tabla ser_consumo_s2000.macs, calculamos el porcentaje de carga con valores por defecto.
