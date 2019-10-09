@@ -252,7 +252,7 @@ cris@cris-VirtualBox:~/Confluent/examples/cp-all-in-one$ sudo docker-compose up 
     schema-registry   /etc/confluent/docker/run        Up                      0.0.0.0:8081->8081/tcp                          
     zookeeper         /etc/confluent/docker/run        Up                      0.0.0.0:2181->2181/tcp, 2888/tcp, 3888/tc
 
-* Docker network
+# Docker network
 ### sudo docker network ls
 
 
@@ -263,7 +263,7 @@ cris@cris-VirtualBox:~/Confluent/examples/cp-all-in-one$ sudo docker-compose up 
     74587912aa8a        host                    host                local
     077e19f151a4        none                    null                local
     
-    
+    e39c19084fec -  br-e39c19084fec
     
 ### ifconfig
 
