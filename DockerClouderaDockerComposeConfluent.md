@@ -252,5 +252,144 @@ cris@cris-VirtualBox:~/Confluent/examples/cp-all-in-one$ sudo docker-compose up 
     schema-registry   /etc/confluent/docker/run        Up                      0.0.0.0:8081->8081/tcp                          
     zookeeper         /etc/confluent/docker/run        Up                      0.0.0.0:2181->2181/tcp, 2888/tcp, 3888/tc
 
+* Docker network
+### sudo docker network ls
+
+
+    NETWORK ID          NAME                    DRIVER              SCOPE
+    e39c19084fec        app-tier                bridge              local
+    0174de20fb6a        bridge                  bridge              local
+    a92ce5cb9325        cp-all-in-one_default   bridge              local
+    74587912aa8a        host                    host                local
+    077e19f151a4        none                    null                local
+    
+    
+    
+### ifconfig
+
+    br-a92ce5cb9325 Link encap:Ethernet  direcciónHW 02:42:3a:33:41:c0  
+              Direc. inet:172.19.0.1  Difus.:172.19.255.255  Másc:255.255.0.0
+              Dirección inet6: fe80::42:3aff:fe33:41c0/64 Alcance:Enlace
+              ACTIVO DIFUSIÓN FUNCIONANDO MULTICAST  MTU:1500  Métrica:1
+              Paquetes RX:177899 errores:0 perdidos:0 overruns:0 frame:0
+              Paquetes TX:165721 errores:0 perdidos:0 overruns:0 carrier:0
+              colisiones:0 long.colaTX:0 
+              Bytes RX:14993835 (14.9 MB)  TX bytes:14046025 (14.0 MB)
+
+    br-e39c19084fec Link encap:Ethernet  direcciónHW 02:42:2d:d6:82:74  
+              Direc. inet:172.18.0.1  Difus.:172.18.255.255  Másc:255.255.0.0
+              ACTIVO DIFUSIÓN MULTICAST  MTU:1500  Métrica:1
+              Paquetes RX:0 errores:0 perdidos:0 overruns:0 frame:0
+              Paquetes TX:0 errores:0 perdidos:0 overruns:0 carrier:0
+              colisiones:0 long.colaTX:0 
+              Bytes RX:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+    docker0   Link encap:Ethernet  direcciónHW 02:42:23:61:72:50  
+              Direc. inet:172.17.0.1  Difus.:172.17.255.255  Másc:255.255.0.0
+              ACTIVO DIFUSIÓN MULTICAST  MTU:1500  Métrica:1
+              Paquetes RX:0 errores:0 perdidos:0 overruns:0 frame:0
+              Paquetes TX:0 errores:0 perdidos:0 overruns:0 carrier:0
+              colisiones:0 long.colaTX:0 
+              Bytes RX:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+    enp0s3    Link encap:Ethernet  direcciónHW 08:00:27:40:0c:db  
+              Direc. inet:10.0.2.15  Difus.:10.0.2.255  Másc:255.255.255.0
+              Dirección inet6: fe80::769:2ec5:7536:5a3/64 Alcance:Enlace
+              ACTIVO DIFUSIÓN FUNCIONANDO MULTICAST  MTU:1500  Métrica:1
+              Paquetes RX:825318 errores:0 perdidos:0 overruns:0 frame:0
+              Paquetes TX:175158 errores:0 perdidos:0 overruns:0 carrier:0
+              colisiones:0 long.colaTX:1000 
+              Bytes RX:1044652552 (1.0 GB)  TX bytes:14647977 (14.6 MB)
+
+    lo        Link encap:Bucle local  
+              Direc. inet:127.0.0.1  Másc:255.0.0.0
+              Dirección inet6: ::1/128 Alcance:Anfitrión
+              ACTIVO BUCLE FUNCIONANDO  MTU:65536  Métrica:1
+              Paquetes RX:412970 errores:0 perdidos:0 overruns:0 frame:0
+              Paquetes TX:412970 errores:0 perdidos:0 overruns:0 carrier:0
+              colisiones:0 long.colaTX:1000 
+              Bytes RX:36509439 (36.5 MB)  TX bytes:36509439 (36.5 MB)
+
+    veth1509176 Link encap:Ethernet  direcciónHW 56:c4:87:ca:4f:5c  
+              Dirección inet6: fe80::54c4:87ff:feca:4f5c/64 Alcance:Enlace
+              ACTIVO DIFUSIÓN FUNCIONANDO MULTICAST  MTU:1500  Métrica:1
+              Paquetes RX:57 errores:0 perdidos:0 overruns:0 frame:0
+              Paquetes TX:151 errores:0 perdidos:0 overruns:0 carrier:0
+              colisiones:0 long.colaTX:0 
+              Bytes RX:5246 (5.2 KB)  TX bytes:106323 (106.3 KB)
+
+    veth000c37b Link encap:Ethernet  direcciónHW fe:f3:ba:5a:af:f7  
+              Dirección inet6: fe80::fcf3:baff:fe5a:aff7/64 Alcance:Enlace
+              ACTIVO DIFUSIÓN FUNCIONANDO MULTICAST  MTU:1500  Métrica:1
+              Paquetes RX:28217 errores:0 perdidos:0 overruns:0 frame:0
+              Paquetes TX:40863 errores:0 perdidos:0 overruns:0 carrier:0
+              colisiones:0 long.colaTX:0 
+              Bytes RX:2869807 (2.8 MB)  TX bytes:3036619 (3.0 MB)
+
+    veth06b60e8 Link encap:Ethernet  direcciónHW ea:f5:0c:04:49:94  
+              Dirección inet6: fe80::e8f5:cff:fe04:4994/64 Alcance:Enlace
+              ACTIVO DIFUSIÓN FUNCIONANDO MULTICAST  MTU:1500  Métrica:1
+              Paquetes RX:9078 errores:0 perdidos:0 overruns:0 frame:0
+              Paquetes TX:12888 errores:0 perdidos:0 overruns:0 carrier:0
+              colisiones:0 long.colaTX:0 
+              Bytes RX:2022728 (2.0 MB)  TX bytes:1298064 (1.2 MB)
+
+    veth18ed0b8 Link encap:Ethernet  direcciónHW 5a:bc:d1:b6:9a:08  
+              Dirección inet6: fe80::58bc:d1ff:feb6:9a08/64 Alcance:Enlace
+              ACTIVO DIFUSIÓN FUNCIONANDO MULTICAST  MTU:1500  Métrica:1
+              Paquetes RX:973968 errores:0 perdidos:0 overruns:0 frame:0
+              Paquetes TX:884254 errores:0 perdidos:0 overruns:0 carrier:0
+              colisiones:0 long.colaTX:0 
+              Bytes RX:175822465 (175.8 MB)  TX bytes:174069463 (174.0 MB)
+
+    veth33703b8 Link encap:Ethernet  direcciónHW da:b9:2a:8d:c0:12  
+              Dirección inet6: fe80::d8b9:2aff:fe8d:c012/64 Alcance:Enlace
+              ACTIVO DIFUSIÓN FUNCIONANDO MULTICAST  MTU:1500  Métrica:1
+              Paquetes RX:67 errores:0 perdidos:0 overruns:0 frame:0
+              Paquetes TX:112 errores:0 perdidos:0 overruns:0 carrier:0
+              colisiones:0 long.colaTX:0 
+              Bytes RX:4957 (4.9 KB)  TX bytes:11188 (11.1 KB)
+
+    veth4b64af3 Link encap:Ethernet  direcciónHW 1a:9b:c4:bc:75:f0  
+              Dirección inet6: fe80::189b:c4ff:febc:75f0/64 Alcance:Enlace
+              ACTIVO DIFUSIÓN FUNCIONANDO MULTICAST  MTU:1500  Métrica:1
+              Paquetes RX:26790 errores:0 perdidos:0 overruns:0 frame:0
+              Paquetes TX:39834 errores:0 perdidos:0 overruns:0 carrier:0
+              colisiones:0 long.colaTX:0 
+              Bytes RX:2551738 (2.5 MB)  TX bytes:2989094 (2.9 MB)
+
+    veth688670c Link encap:Ethernet  direcciónHW aa:24:ad:7b:27:56  
+              Dirección inet6: fe80::a824:adff:fe7b:2756/64 Alcance:Enlace
+              ACTIVO DIFUSIÓN FUNCIONANDO MULTICAST  MTU:1500  Métrica:1
+              Paquetes RX:351694 errores:0 perdidos:0 overruns:0 frame:0
+              Paquetes TX:273006 errores:0 perdidos:0 overruns:0 carrier:0
+              colisiones:0 long.colaTX:0 
+              Bytes RX:52904371 (52.9 MB)  TX bytes:28572244 (28.5 MB)
+
+    vethbbe4a74 Link encap:Ethernet  direcciónHW 7a:07:28:9a:93:fb  
+              Dirección inet6: fe80::7807:28ff:fe9a:93fb/64 Alcance:Enlace
+              ACTIVO DIFUSIÓN FUNCIONANDO MULTICAST  MTU:1500  Métrica:1
+              Paquetes RX:0 errores:0 perdidos:0 overruns:0 frame:0
+              Paquetes TX:66 errores:0 perdidos:0 overruns:0 carrier:0
+              colisiones:0 long.colaTX:0 
+              Bytes RX:0 (0.0 B)  TX bytes:7461 (7.4 KB)
+
+    vethcc51369 Link encap:Ethernet  direcciónHW fa:d2:8f:c2:bb:86  
+              Dirección inet6: fe80::f8d2:8fff:fec2:bb86/64 Alcance:Enlace
+              ACTIVO DIFUSIÓN FUNCIONANDO MULTICAST  MTU:1500  Métrica:1
+              Paquetes RX:477989 errores:0 perdidos:0 overruns:0 frame:0
+              Paquetes TX:617570 errores:0 perdidos:0 overruns:0 carrier:0
+              colisiones:0 long.colaTX:0 
+              Bytes RX:115714479 (115.7 MB)  TX bytes:141819750 (141.8 MB)
+
+    vethfd7198a Link encap:Ethernet  direcciónHW 1a:98:57:b7:be:2b  
+              Dirección inet6: fe80::1898:57ff:feb7:be2b/64 Alcance:Enlace
+              ACTIVO DIFUSIÓN FUNCIONANDO MULTICAST  MTU:1500  Métrica:1
+              Paquetes RX:16 errores:0 perdidos:0 overruns:0 frame:0
+              Paquetes TX:65 errores:0 perdidos:0 overruns:0 carrier:0
+              colisiones:0 long.colaTX:0 
+              Bytes RX:1170 (1.1 KB)  TX bytes:8263 (8.2 KB)
+
+
 
 
