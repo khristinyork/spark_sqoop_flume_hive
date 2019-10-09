@@ -1,4 +1,5 @@
-Para que convivan en la misma red el docker de cloudera y el confluence:
+##Para que convivan en la misma red el docker de cloudera y el docker-compose de Confluent:
+
 El Resource Manager de cloudera tiene el puerto 8088
 y en el docker-compose de Confluence el puerto de kql-server tiene el mismo puerto el 8088
 por eso cambiamos en el docker_compouse.yml el puerto de kdql-server a 8988
