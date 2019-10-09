@@ -1,20 +1,22 @@
-##Para que convivan en la misma red el docker de cloudera y el docker-compose de Confluent:
+# Para que convivan en la misma red el docker de cloudera y el docker-compose de Confluent:
 
-El Resource Manager de cloudera tiene el puerto 8088
-y en el docker-compose de Confluence el puerto de kql-server tiene el mismo puerto el 8088
-por eso cambiamos en el docker_compouse.yml el puerto de kdql-server a 8988
+* El Resource Manager de cloudera tiene el puerto 8088
+* y en el docker-compose de Confluence el puerto de kql-server tiene el mismo puerto el 8088
+* por eso cambiamos en el docker_compouse.yml el puerto de kdql-server a 8988
 
-Además el docker de cloudera debe estar en el misma red que el docker-compose de  Confluent 
+* Además el docker de cloudera debe estar en el misma red que el docker-compose de  Confluent 
+
 --network=cp-all-in-one_default:
 
 
-sudo docker run --hostname=quickstart.cloudera  --network=cp-all-in-one_default --privileged=true -t -i -v /home/docker-clodera:/src --publish-all=true -p 8088:58088 -p 50090:50090 -p 50070:50070 -p 50075:50075 -p 8042:8042 -p 60030:60030 -p 25000:25000 -p 25010:25010 -p 8983:8983 -p 11000:11000 repository/cloudera_spark2:1 /usr/bin/docker-quickstart
+### sudo docker run --hostname=quickstart.cloudera  --network=cp-all-in-one_default --privileged=true -t -i -v /home/docker-clodera:/src --publish-all=true -p 8088:58088 -p 50090:50090 -p 50070:50070 -p 50075:50075 -p 8042:8042 -p 60030:60030 -p 25000:25000 -p 25010:25010 -p 8983:8983 -p 11000:11000 repository/cloudera_spark2:1 /usr/bin/docker-quickstart
 
 
 
 
 
-docker-compose .yml
+### docker-compose .yml
+
 version: '2'
 services:
   zookeeper:
@@ -195,54 +197,50 @@ services:
 
 
 
-
-
-
-
 /usr/java/jdk1.8.0_131
 
 export JAVA_HOME=/usr/java/jdk1.8.0_131
 
 
-network cp-all-in-one_default
+### network cp-all-in-one_default
 
-#Para arrancar el docker compose de confluent :
-cd /home/cris/Confluent/examples/cp-all-in-one
+* Para arrancar el docker compose de confluent :
+### cd /home/cris/Confluent/examples/cp-all-in-one
 
-sudo docker-compose up  --build;sudo docker-compose ps;
+### sudo docker-compose up  --build;sudo docker-compose ps;
 
-#Run this command to verify that the services are up and running.
+* Run this command to verify that the services are up and running.
 
-sudo docker-compose ps;
+### sudo docker-compose ps;
 
-#Parar todos los servicios:
+* Parar todos los servicios:
 
-sudo docker container stop $(sudo docker container ls -a -q -f "label=io.confluent.docker");
+### sudo docker container stop $(sudo docker container ls -a -q -f "label=io.confluent.docker");
 
-#Navigate to the Control Center web interface at
- http://localhost:9021/.
+* Navigate to the Control Center web interface at
+ ### http://localhost:9021/.
 
-#meterte nosdentro de un servicio del docker-compose de confluence
+* Meterte nos dentro de un servicio del docker-compose de confluence
 
-docker-compose exec ksql-cli ksql http://ksql-server:8088
+### docker-compose exec ksql-cli ksql http://ksql-server:8088
 
 
-sudo docker-compose exec -i -t broker /bin/bash
+### sudo docker-compose exec -i -t broker /bin/bash
 
 cris@cris-VirtualBox:~/Confluent/examples/cp-all-in-one$ sudo docker-compose up -d --build;sudo docker-compose ps;
 
-# guardar la traza de log
-sudo docker-compose up >> console.log 2>&1
+* Guardar la traza de log
+### sudo docker-compose up >> console.log 2>&1
 
-Starting zookeeper ... done
-Starting broker    ... done
-Starting schema-registry ... done
+Starting zookeeper       ... done
+Starting###  schema-registry ... done
 Starting rest-proxy      ... done
 Starting connect         ... done
 Starting ksql-server     ... done
 Starting ksql-datagen    ... done
 Starting control-center  ... done
 Starting ksql-cli        ... done
+
      Name                    Command                       State                                Ports                      
 ---------------------------------------------------------------------------------------------------------------------------
 broker            /etc/confluent/docker/run        Up                      0.0.0.0:29092->29092/tcp, 0.0.0.0:9092->9092/tcp
