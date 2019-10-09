@@ -231,26 +231,26 @@ cris@cris-VirtualBox:~/Confluent/examples/cp-all-in-one$ sudo docker-compose up 
 * Guardar la traza de log
 ### sudo docker-compose up >> console.log 2>&1
 
-Starting zookeeper       ... done
-Starting###  schema-registry ... done
-Starting rest-proxy      ... done
-Starting connect         ... done
-Starting ksql-server     ... done
-Starting ksql-datagen    ... done
-Starting control-center  ... done
-Starting ksql-cli        ... done
+    Starting zookeeper       ... done
+    Starting schema-registry ... done
+    Starting rest-proxy      ... done
+    Starting connect         ... done
+    Starting ksql-server     ... done
+    Starting ksql-datagen    ... done
+    Starting control-center  ... done
+    Starting ksql-cli        ... done
 
-     Name                    Command                       State                                Ports                      
----------------------------------------------------------------------------------------------------------------------------
-broker            /etc/confluent/docker/run        Up                      0.0.0.0:29092->29092/tcp, 0.0.0.0:9092->9092/tcp
-connect           /etc/confluent/docker/run        Up (health: starting)   0.0.0.0:8083->8083/tcp, 9092/tcp                
-control-center    /etc/confluent/docker/run        Up                      0.0.0.0:9021->9021/tcp                          
-ksql-cli          /bin/sh                          Up                                                                      
-ksql-datagen      bash -c echo Waiting for K ...   Up                                                                      
-ksql-server       /etc/confluent/docker/run        Up                      0.0.0.0:8088->8088/tcp                          
-rest-proxy        /etc/confluent/docker/run        Up                      0.0.0.0:8082->8082/tcp                          
-schema-registry   /etc/confluent/docker/run        Up                      0.0.0.0:8081->8081/tcp                          
-zookeeper         /etc/confluent/docker/run        Up                      0.0.0.0:2181->2181/tcp, 2888/tcp, 3888/tc
+         Name                    Command                       State                                Ports                      
+    ---------------------------------------------------------------------------------------------------------------------------
+    broker            /etc/confluent/docker/run        Up                      0.0.0.0:29092->29092/tcp, 0.0.0.0:9092->9092/tcp
+    connect           /etc/confluent/docker/run        Up (health: starting)   0.0.0.0:8083->8083/tcp, 9092/tcp                
+    control-center    /etc/confluent/docker/run        Up                      0.0.0.0:9021->9021/tcp                          
+    ksql-cli          /bin/sh                          Up                                                                      
+    ksql-datagen      bash -c echo Waiting for K ...   Up                                                                      
+    ksql-server       /etc/confluent/docker/run        Up                      0.0.0.0:8088->8088/tcp                          
+    rest-proxy        /etc/confluent/docker/run        Up                      0.0.0.0:8082->8082/tcp                          
+    schema-registry   /etc/confluent/docker/run        Up                      0.0.0.0:8081->8081/tcp                          
+    zookeeper         /etc/confluent/docker/run        Up                      0.0.0.0:2181->2181/tcp, 2888/tcp, 3888/tc
 
 
 
