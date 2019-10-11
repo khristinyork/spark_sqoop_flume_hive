@@ -1,0 +1,69 @@
+git flow init
+
+Esto nos hará las siguientes preguntas, podemos dejar la configuración por defecto pulsando enter hasta terminar:
+Git Flow InitUna vez configurado ya podemos usar git flow.
+Para crear una rama feature con git-flow (desde develop):
+
+git flow feature start nombre_rama
+
+El equivalente con git sería:
+
+git checkout -b feature/nombre_rama develop
+
+Una vez terminado nuestro trabajo, finalizamos la rama como sigue (una vez hecho commit):
+
+git flow feature finish nombre_rama
+
+Si nuestra rama esta desactualizada con respecto a remoto, 
+es posible que nos de algún error y siempre puedes cambiarte a la rama develop, 
+actualizarla y hacerlo de la manera tradicional:
+
+git checkout develop
+
+git fetch
+
+git pull origin develop
+
+git merge --no-ff feature/nombre_rama
+
+git branch -d feature/nombre_rama
+
+Ramas Release:
+
+Origen: develop
+
+Destino: master y develop
+
+Nombre: release/nombre_version
+
+Estas ramas se crean siempre a partir de la rama develop.
+En ellas se hacen los últimos retoques como el cambio del número de versión, 
+cambios en la configuración para que todo apunte a los servidores de producción y
+algún posible bug que encontremos durante las pruebas.Una vez que todo está configurado 
+y probado se fusiona la rama release en la master, a la cual se añade un tag con el número de versión,
+y en develop para que el código de develop mantenga los bugs corregidos.Los comandos son los siguientes:
+Para la creación de la rama con git-flow
+
+git flow release start numero_version
+
+Su equivalente con git es:
+
+git checkout -b release/numero_version develop
+
+Y para finalizar la rama:
+
+git flow release finish numero_version
+
+Su equivalencia en git:
+
+git checkout master
+
+git merge --no-ff release/numero_version
+
+git tag -a numero_version -m "Merge branch 'release/numero_version'"
+
+git checkout develop
+
+git merge --no-ff release/numero_version
+
+git branch -d release/numero_version
