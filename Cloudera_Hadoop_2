@@ -1,6 +1,6 @@
 sudo -u hdfs hdfs namenode -format
 /opt/spark-2.2.0-bin-hadoop2.7/sbin/start-all.sh
-cd /opt/cloudera/parcels/CDH-5.13.0-1.cdh5.13.0.p0.29/etc/default/4.0K -rw-r--r--  1 root root 1.2K Oct  4  2017 flume-ng-agent7
+ls /opt/cloudera/parcels/CDH-5.13.0-1.cdh5.13.0.p0.29/etc/default/4.0K -rw-r--r--  1 root root 1.2K Oct  4  2017 flume-ng-agent7
 4.0K -rw-r--r--  1 root root  855 Oct  4  2017 zookeeper
 4.0K -rw-r--r--  1 root root 1.1K Oct  4  2017 bigtop-utils
 4.0K -rw-r--r--  1 root root  986 Oct  4  2017 impala
