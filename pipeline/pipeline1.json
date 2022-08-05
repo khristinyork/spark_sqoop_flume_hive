@@ -17,11 +17,15 @@
 				"typeProperties": {
 					"source": {
 						"type": "DelimitedTextSource",
+						"additionalColumns": [
+							{
+								"name": "ruta",
+								"value": "$$FILEPATH"
+							}
+						],
 						"storeSettings": {
 							"type": "AzureBlobStorageReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": "*",
-							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
@@ -51,7 +55,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Doc",
+						"referenceName": "Doc1",
 						"type": "DatasetReference"
 					}
 				],
