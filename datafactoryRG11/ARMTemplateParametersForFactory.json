@@ -5,8 +5,14 @@
 		"factoryName": {
 			"value": "datafactoryRG11"
 		},
+		"AzureBlobStorage2_connectionString": {
+			"value": ""
+		},
 		"AzureBlobStorage1_properties_typeProperties_serviceEndpoint": {
 			"value": "https://blbstorage1.blob.core.windows.net/"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://storageAcount1.vault.azure.net/"
 		}
 	}
 }
