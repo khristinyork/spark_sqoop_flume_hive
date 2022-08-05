@@ -1,0 +1,32 @@
+{
+	"name": "SourceDataset_vzm",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "doc1.csv",
+				"container": "blbsource1"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "producto",
+				"type": "String"
+			},
+			{
+				"name": "descripcion",
+				"type": "String"
+			}
+		]
+	}
+}
