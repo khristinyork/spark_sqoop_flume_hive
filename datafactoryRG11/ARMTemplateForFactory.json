@@ -37,10 +37,16 @@
 						"typeProperties": {
 							"source": {
 								"type": "DelimitedTextSource",
+								"additionalColumns": [
+									{
+										"name": "ruta",
+										"value": "$$FILEPATH"
+									}
+								],
 								"storeSettings": {
 									"type": "AzureBlobStorageReadSettings",
 									"recursive": true,
-									"wildcardFolderPath": "blob",
+									"wildcardFolderPath": "*",
 									"wildcardFileName": "*",
 									"enablePartitionDiscovery": false
 								},
@@ -71,7 +77,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "Doc",
+								"referenceName": "Doc1",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -99,7 +105,7 @@
 				"lastPublishTime": "2022-08-04T19:55:46Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Doc')]",
+				"[concat(variables('factoryId'), '/datasets/Doc1')]",
 				"[concat(variables('factoryId'), '/datasets/DelimitedText1')]"
 			]
 		},
