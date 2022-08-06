@@ -1,0 +1,16 @@
+{
+	"name": "Dynamic Data Masking",
+	"properties": {
+		"content": {
+			"query": "    -------------------------------------------------------------------------Dynamic Data Masking (DDM)----------------------------------------------------------------------------------------------------------\r\n    /*  Dynamic data masking helps prevent unauthorized access to sensitive data by enabling customers\r\n        to designate how much of the sensitive data to reveal with minimal impact on the application layer.\r\n        Let see how */\r\n\r\n    /* Scenario: WWI has identified sensitive information in the CustomerInfo table. They would like us to \r\n        obfuscate the CreditCard and Email columns of the CustomerInfo table to DataAnalysts */\r\n\r\n    -- Step:1 Let us first get a view of CustomerInfo table.\r\n    SELECT TOP (100) * FROM wwi_security.CustomerInfo;\r\n\r\n    -- Step:2 Let's confirm that there are no Dynamic Data Masking (DDM) applied on columns.\r\n    SELECT c.name, tbl.name as table_name, c.is_masked, c.masking_function  \r\n    FROM sys.masked_columns AS c  \r\n    JOIN sys.tables AS tbl\r\n        ON c.[object_id] = tbl.[object_id]  \r\n    WHERE is_masked = 1\r\n        AND tbl.name = 'CustomerInfo';\r\n    -- No results returned verify that no data masking has been done yet.\r\n\r\n    -- Step:3 Now lets mask 'CreditCard' and 'Email' Column of 'CustomerInfo' table.\r\n    ALTER TABLE wwi_security.CustomerInfo  \r\n    ALTER COLUMN [CreditCard] ADD MASKED WITH (FUNCTION = 'partial(0,\"XXXX-XXXX-XXXX-\",4)');\r\n    GO\r\n    ALTER TABLE wwi_security.CustomerInfo\r\n    ALTER COLUMN Email ADD MASKED WITH (FUNCTION = 'email()');\r\n    GO\r\n    -- The columns are sucessfully masked.\r\n\r\n    -- Step:4 Let's see Dynamic Data Masking (DDM) applied on the two columns.\r\n    SELECT c.name, tbl.name as table_name, c.is_masked, c.masking_function  \r\n    FROM sys.masked_columns AS c  \r\n    JOIN sys.tables AS tbl\r\n        ON c.[object_id] = tbl.[object_id]  \r\n    WHERE is_masked = 1\r\n        AND tbl.name ='CustomerInfo';\r\n\r\n    -- Step:5 Now, let us grant SELECT permission to 'DataAnalystMiami' on the 'CustomerInfo' table.\r\n   GRANT SELECT ON wwi_security.CustomerInfo TO DataAnalystMiami;  \r\n\r\n    -- Step:6 Logged in as  'DataAnalystMiami' let us execute the select query and view the result.\r\n    EXECUTE AS USER = 'DataAnalystMiami';  \r\n    SELECT * FROM wwi_security.CustomerInfo;\r\n\r\n    -- Step:7 Let us remove the data masking using UNMASK permission\r\n    GRANT UNMASK TO DataAnalystMiami;\r\n    EXECUTE AS USER = 'DataAnalystMiami';  \r\n    SELECT *\r\n    FROM wwi_security.CustomerInfo;\r\n    revert;\r\n    REVOKE UNMASK TO DataAnalystMiami;  \r\n\r\n    ----step:8 Reverting all the changes back to as it was.\r\n    ALTER TABLE wwi_security.CustomerInfo\r\n    ALTER COLUMN CreditCard DROP MASKED;\r\n    GO\r\n    ALTER TABLE wwi_security.CustomerInfo\r\n    ALTER COLUMN Email DROP MASKED;\r\n    GO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"name": "SQLPool01",
+				"type": "SqlPool"
+			}
+		},
+		"type": "SqlQuery"
+	}
+}
