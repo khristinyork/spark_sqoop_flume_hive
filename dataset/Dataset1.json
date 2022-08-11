@@ -1,0 +1,20 @@
+{
+	"name": "Dataset1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "asadatalakesqeyh7v",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Avro",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "sale-small-20191231-snappy.parquet",
+				"fileSystem": "wwi-02"
+			},
+			"avroCompressionCodec": "snappy"
+		},
+		"schema": {}
+	}
+}
