@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 1",
+	"properties": {
+		"content": {
+			"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'wwi-02_asadatalakesqeyh7v_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [wwi-02_asadatalakesqeyh7v_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://wwi-02@asadatalakesqeyh7v.dfs.core.windows.net' \n\t)\nGO\n\nCREATE EXTERNAL TABLE tablaexternas (\n\t[TransactionId] nvarchar(4000),\n\t[CustomerId] int,\n\t[ProductId] smallint,\n\t[Quantity] smallint,\n\t[Price] numeric(38,18),\n\t[TotalAmount] numeric(38,18),\n\t[TransactionDate] int,\n\t[ProfitAmount] numeric(38,18),\n\t[Hour] smallint,\n\t[Minute] smallint,\n\t[StoreId] smallint\n\t)\n\tWITH (\n\tLOCATION = 'sale-small-20191231-snappy.parquet',\n\tDATA_SOURCE = [wwi-02_asadatalakesqeyh7v_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM bd1.tablaexternas\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "",
+				"poolName": ""
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
