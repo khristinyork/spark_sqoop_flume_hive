@@ -13,7 +13,46 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "df1",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"itemName",
+						{
+							"value": "@concat(pipeline().DataFactory,pipeline().RunId)",
+							"type": "Expression"
+						}
+					],
+					"storeSettings": {
+						"type": "AzureBlobStorageReadSettings",
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "Es csv",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "CsvDataFolder",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@not(endswith(activity('CsvDataFolder').output.itemType,'csv'))",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"annotations": []
